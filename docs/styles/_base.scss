@@ -1,0 +1,163 @@
+/**
+* Core
+*/
+
+html {
+  background-color: $white;
+  font-size: 16px;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-family: $base-font-family;
+}
+
+body {
+  color: $dark-grey;
+  font-size: $font-size-base;
+  font-weight: $weight-normal;
+  line-height: $base-line-height;
+
+  a {
+    text-decoration: none !important;
+  }
+}
+
+/**
+* Customized styles
+*/
+
+.book {
+  .book-header {
+    color: $dark-blue;
+    font-weight: $weight-semibold;
+    position: fixed;
+    width: 100%;
+    background: rgba($white, 0.7);
+
+    .btn {
+      color: $dark-grey;
+    }
+
+    .toggle-dropdown,
+    .pull-right {
+      display: none !important;
+    }
+  }
+
+  .page-wrapper {
+    padding-top: 50px;
+  }
+
+  .book-summary  {
+    .exc-trigger {
+      left: auto;
+      right: $spacing-medium;
+    }
+  }
+
+  .page-inner {
+    max-width: 100%;
+    padding: $spacing-big 100px;
+
+    @include mobile {
+      padding: $spacing-medium;
+    }
+
+    @include until($widescreen) {
+      padding: $spacing-big;
+    }
+  }
+
+  .summary {
+    li {
+      &.active {
+        & > a:first-child {
+          color: $orange !important;
+        }
+      }
+    }
+
+    a {
+      color: $dark-grey !important;
+      font-size: $size-8 !important;
+      padding: $spacing-small $spacing-medium !important;
+      font-weight: $weight-semibold;
+
+      &:hover {
+        text-decoration: none;
+        color: $orange !important;
+
+        i {
+          color: $orange !important;
+        }
+      }
+    }
+
+    .divider {
+      display: none;
+    }
+  }
+
+  .markdown-section {
+    color: $dark-grey;
+    font-size: $size-7;
+
+    code,
+    pre {
+      background-color: $warm-grey;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: $orange;
+    }
+
+    h1 {
+      font-size: $size-3;
+    }
+
+    h2 {
+      font-size: $size-4;
+    }
+
+    h3 {
+      font-size: $size-5;
+    }
+
+    h4 {
+      font-size: $size-6;
+    }
+
+    h5 {
+      font-size: $size-7;
+    }
+
+    h6 {
+      font-size: $size-8;
+    }
+
+    a {
+      color: $teal;
+    }
+  }
+
+  .gitbook-link {
+    display: none !important;
+  }
+
+  .search-results-item  {
+    a {
+      color: $teal !important;
+    }
+  }
+
+  .search-query {
+    color: $orange;
+  }
+}
+

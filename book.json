@@ -1,0 +1,7 @@
+{
+  "root": "./docs",
+  "plugins": ["expandable-chapters"],
+  "styles": {
+    "website": "styles/website.scss"
+  }
+}

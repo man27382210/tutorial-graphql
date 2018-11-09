@@ -30,10 +30,10 @@
     "promise": "8.0.1",
     "r": "^2.8.0",
     "raf": "3.4.0",
-    "react": "^16.2.0",
+    "react": "^16.6.1",
     "react-apollo": "latest",
     "react-dev-utils": "^5.0.1",
-    "react-dom": "^16.2.0",
+    "react-dom": "^16.6.1",
     "resolve": "1.6.0",
     "source-map-loader": "^0.2.1",
     "style-loader": "0.19.0",
@@ -56,10 +56,12 @@
     "@types/jest": "23.3.1",
     "@types/node": "10.9.2",
     "@types/prop-types": "15.5.5",
-    "@types/react": "16.4.13",
-    "@types/react-dom": "16.0.7",
+    "@types/react": "16.4.18",
+    "@types/react-dom": "16.0.9",
     "@types/react-test-renderer": "16.0.2",
     "apollo-codegen": "0.20.2",
+    "gitbook-cli": "^2.3.2",
+    "gitbook-plugin-expandable-chapters": "^0.2.0",
     "lodash-es": "^4.17.11",
     "react-test-renderer": "16.4.2",
     "typescript": "3.0.3"
@@ -68,7 +70,9 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "types": "apollo-codegen generate ./src/**/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/__generated__/types.ts"
+    "apollo-types": "apollo-codegen generate ./src/Apollo/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/Apollo/__generated__/types.ts",
+    "relay-types": "relay-compiler --src ./src/Relay --schema ./src/schema.json --extensions ts tsx js",
+    "docs": "gitbook serve"
   },
   "jest": {
     "collectCoverageFrom": [

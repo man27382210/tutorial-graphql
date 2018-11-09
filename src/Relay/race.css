@@ -1,0 +1,17 @@
+.race-component {
+  margin: 10px;
+}
+
+.race-element {
+  float: left;
+  margin: 0 15px;
+}
+
+.race-element .race-element-img{
+  width: 150px;
+  height: 150px;
+}
+
+.clear {
+  clear: both;
+}
