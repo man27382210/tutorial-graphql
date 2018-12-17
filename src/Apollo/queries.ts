@@ -1,18 +1,31 @@
 import gql from 'graphql-tag';
 
-export const RACE_QUERY = gql`
-  query GetRaceWithSourceId($sourceId: String!, $deviceType: String) {
-    race(sourceId: $sourceId, deviceType: $deviceType) {
-      status
-      revision
-      contentsType {
-        targetId
-        targetContent {
-          landingUrl
-          bannerUrl
-          altString
-        }
-      }
+export const SWPersonQUERY = gql`
+  query GetSWPersonByPersonID($personID: ID){
+    person(personID: $personID) {
+      ...info
     }
   }
+  fragment info on Person {
+    id
+    name
+    filmConnection {
+      films {
+        title
+        episodeID
+      }
+    }
+    starshipConnection {
+      starships {
+        ...shipInfo
+      }
+      totalCount
+    }
+  }
+  fragment shipInfo on Starship {
+      name
+      starshipClass
+  }
 `;
+
+

@@ -1,50 +1,41 @@
 import * as React from 'react';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { query as personQuery } from './queries';
+
+const searchStyle = () => createStyles({
+  pre: {
+    margin: 0,
+  },
+  infoPaper: {
+    padding: 20,
+    minHeight: 100,
+  }
+})
+
+interface Props extends WithStyles<typeof searchStyle> {}
 
 interface Person {
   person: {[key: string]: string};
   error: boolean;
   loading: boolean;
+  personID: string,
   fetchPerson?: (personID: string) => void,
+  graphqlQueryString: string,
 }
 
 const PersonState: Person = { 
   person: {},
   error: false,
   loading: true,
+  personID: '1',
+  graphqlQueryString: personQuery,
 };
 
 const PersonContext = React.createContext(PersonState);
 
-  var query = `
-  query GetSWPersonByPersonID($personID: ID){
-    person(personID: $personID) {
-      ...info
-    }
-  }
-  fragment info on Person {
-    id
-    name
-    filmConnection {
-      films {
-        title
-        episodeID
-      }
-    }
-    starshipConnection {
-      starships {
-        ...shipInfo
-      }
-      totalCount
-    }
-  }
-  fragment shipInfo on Starship {
-      name
-      starshipClass
-  }
-  `;
-
-
-export const SearchUser: React.SFC<{}> = props => {
+export const SearchUser = withStyles(searchStyle)(({ classes }: Props)=> {
   const personIDInput = React.createRef<HTMLInputElement>();
   return (
     <PersonContext.Consumer>
@@ -54,27 +45,27 @@ export const SearchUser: React.SFC<{}> = props => {
           if (fetchPerson) fetchPerson(personID);
         }
         return (
-        <React.Fragment>
-          <input ref={personIDInput} defaultValue='1'/>
-          <button onClick={submitPerson}> GET Person </button>
-        </React.Fragment>)
+          <Paper className={classes.infoPaper}>
+            <input ref={personIDInput} defaultValue='1'/>
+            <button onClick={submitPerson}> GET Person </button>
+          </Paper>
+        )
       }}
     </PersonContext.Consumer>
   )
-}
+});
 
-export const Person: React.SFC<{}> = props => {
-  const renderLoading:() => JSX.Element = (): JSX.Element  => <div>Loading</div>;
-  const renderNoData:() => JSX.Element = (): JSX.Element  => <div>No data</div>;
+export const Person = withStyles(searchStyle)(({ classes }: Props)=> {
+  const renderLoading:() => JSX.Element = (): JSX.Element  => <Paper className={classes.infoPaper}><div>Loading</div></Paper>;
+  const renderNoData:() => JSX.Element = (): JSX.Element  => <Paper className={classes.infoPaper}><div>No data</div></Paper>;
   return (
       <PersonContext.Consumer>
         {({error, loading, person}) => {
           if (loading) return renderLoading();
           if (error) return renderNoData();
           return (
-            <React.Fragment>  
+            <Paper className={classes.infoPaper}>
               <div>{person.name}</div>
-              <div>{person.id}</div>
               <div>Start ship:</div>
               <ul>
                 {person.starshipConnection &&
@@ -90,16 +81,18 @@ export const Person: React.SFC<{}> = props => {
                   : null
                 }
               </ul>
-            </React.Fragment>
+            </Paper>
           )
         }}
       </PersonContext.Consumer>    
   );
-};
+});
 
-class PersonApp extends React.Component {
+class PersonApp extends React.Component<Props, Person> {
   state = PersonState;
   public render () {
+    const { classes } = this.props
+    const { personID } = this.state
     return (
       <PersonContext.Provider
         value={
@@ -109,8 +102,35 @@ class PersonApp extends React.Component {
           }
         }
       >
-        <SearchUser />
-        <Person />
+         <Grid container spacing={24}>
+          <Grid container item xs={12}>
+            <Paper>
+              Basic POST
+            </Paper>
+          </Grid>
+          <Grid container item xs={6} spacing={16}>
+            <Grid item xs={6}>
+              <SearchUser />
+            </Grid>
+            <Grid item xs={6}>
+              <Person />
+            </Grid>
+          </Grid>
+          <Grid item xs={6}>
+            <Paper>
+              <pre className={classes.pre}>
+                <code>
+                  {personQuery}
+                </code>
+                <code>
+                  {`variables: {
+                    "personID": ${personID},
+                  }`}
+                </code>
+              </pre>
+            </Paper>
+          </Grid>
+        </Grid>
       </PersonContext.Provider>
     )
   }
@@ -124,7 +144,7 @@ class PersonApp extends React.Component {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          query,
+          query: personQuery,
           variables: {
             "personID": `${personID}`,
           },
@@ -135,7 +155,8 @@ class PersonApp extends React.Component {
         this.setState({
           person: result.data['person'],
           loading: false,
-          error: false
+          error: false,
+          personID: personID
         })
       })
       .catch((e: Error) => {
@@ -148,4 +169,4 @@ class PersonApp extends React.Component {
   }
 }
 
-export default PersonApp;
+export default withStyles(searchStyle)(PersonApp);

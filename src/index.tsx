@@ -1,5 +1,13 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import PersonApp from './Basic/App';
+import { PersonApolloApp } from './Apollo/index';
 
-render(<PersonApp />, document.getElementById('basic'));
+const App = () => (
+  <React.Fragment>
+    <PersonApp />
+    <PersonApolloApp />
+  </React.Fragment>
+)
+
+render(<App />, document.getElementById('basic'));
