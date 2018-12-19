@@ -37,6 +37,7 @@
     "react-dev-utils": "^5.0.1",
     "react-dom": "^16.6.1",
     "react-relay": "^1.7.0",
+    "relay-runtime": "1.7.0-rc.1",
     "resolve": "1.6.0",
     "source-map-loader": "^0.2.1",
     "style-loader": "0.19.0",
@@ -55,6 +56,9 @@
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-transform-react-jsx": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
     "@types/graphql": "0.12.7",
     "@types/jest": "23.3.1",
     "@types/node": "10.9.2",
@@ -62,15 +66,20 @@
     "@types/react": "16.4.18",
     "@types/react-dom": "16.0.9",
     "@types/react-test-renderer": "16.0.2",
+    "@types/relay-runtime": "^1.3.6",
     "apollo": "^2.1.7",
     "apollo-codegen": "0.20.2",
+    "babel-plugin-relay": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
     "get-graphql-schema": "^2.1.2",
     "gitbook-cli": "^2.3.2",
     "gitbook-plugin-expandable-chapters": "^0.2.0",
+    "graphql-compiler": "^1.7.0",
     "lodash-es": "^4.17.11",
     "react-test-renderer": "16.4.2",
     "relay-compiler": "^1.7.0",
-    "typescript": "^3.2.1"
+    "relay-compiler-language-typescript": "^1.1.1",
+    "typescript": "^3.2.2"
   },
   "scripts": {
     "start": "node scripts/start.js",
@@ -79,8 +88,7 @@
     "get-schema": "node_modules/.bin/get-graphql-schema http://localhost:5000/ > ./src/schema.json -j",
     "get-schema-graphql": "node_modules/.bin/get-graphql-schema http://localhost:5000/ > ./src/schema.graphql",
     "apollo-types": "apollo client:codegen --addTypename --schema --target typescript",
-    "apollo-types-deprecate": "apollo client:codegen ./src/Apollo/queries.ts --addTypename --schema ./src/schema.json --target typescript --output ./src/Apollo/__generated__/types.ts",
-    "relay-types": "relay-compiler --src ./src/Relay --schema ./src/schema.graphql --extensions ts",
+    "relay-types": "relay-compiler --language typescript --src ./src/Relay --artifactDirectory ./src/Relay/__generated__ --schema ./src/schema.graphql --extensions ts",
     "docs": "gitbook serve"
   },
   "jest": {
@@ -126,10 +134,5 @@
         "tsConfigFile": "/Users/taiwei.tseng/Documents/Rakuten/TRY/ichiba-graphql/tsconfig.test.json"
       }
     }
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
   }
 }

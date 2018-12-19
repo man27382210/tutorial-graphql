@@ -136,6 +136,12 @@ class PersonApp extends React.Component<Props, Person> {
   }
   private fetchPerson = (personID: string) => {
     if(fetch) {
+      console.log(JSON.stringify({
+        query: personQuery,
+        variables: {
+          "personID": `${personID}`,
+        },
+      }))
       fetch('http://localhost:5000/', 
       {
         method: 'POST',

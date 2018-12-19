@@ -16,7 +16,7 @@ const client = new ApolloClient({
   link: httpLink
 });
 
-export const PersonApolloApp = () => (
+export default () => (
   <ApolloProvider client={client}>
     <App />
   </ApolloProvider>

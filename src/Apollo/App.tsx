@@ -86,21 +86,20 @@ export const App = withStyles(searchStyle)(
     render() {
       const { classes } = this.props
       const { loading, error, personID } = this.state
-      console.log(personID)
       return (
         <React.Fragment>
           <Paper className={classes.infoPaper}>
-          <input ref={this.personIDInput} defaultValue='1'/>
-          <button onClick={this.submitPerson}> GET Person </button>
-        </Paper>
-        <Paper>
-          {error
-            ? renderError()
-            : !loading && personID.length > 0
-              ? <GraphQLPerson {...{classes, personID}}/>
-              : renderLoading()
-          }
-        </Paper>
+            <input ref={this.personIDInput} defaultValue='1'/>
+            <button onClick={this.submitPerson}> GET Person </button>
+          </Paper>
+          <Paper>
+            {error
+              ? renderError()
+              : !loading && personID.length > 0
+                ? <GraphQLPerson {...{classes, personID}}/>
+                : renderLoading()
+            }
+          </Paper>
         </React.Fragment>
       );
     }
