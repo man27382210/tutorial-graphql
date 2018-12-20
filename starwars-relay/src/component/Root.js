@@ -1,10 +1,14 @@
 import React from 'react'
+import Paper from '@material-ui/core/Paper'
+import Grid from '@material-ui/core/Grid'
 import { QueryRenderer } from 'react-relay'
 import { modernEnvironment } from '../env'
 import { personQuery } from '../queries/GetSWPersonByPersonID'
 import InfoFragment from './InfoFragment'
+import { searchStyle } from '../util/style'
 
-const PersonQuery = (props) => {
+const PersonQuery = searchStyle((props) => {
+  const { classes } = props
   return (
     <QueryRenderer
       environment={modernEnvironment}
@@ -12,19 +16,19 @@ const PersonQuery = (props) => {
       variables={{personID: props.personID}}
       render={({error, props}) => {
         if (error) {
-          return <div>{error}</div>
+          return <Paper className={classes.infoPaper}><div>Error</div></Paper>
         }
         if (props && props.person) {
           return <InfoFragment data={props.person}/>
         } else {
-          return <div>Loading</div>
+          return <Paper className={classes.infoPaper}><div>Loading</div></Paper>
         }
       }}
     />
   )
-}
+})
 
-export default class PersonApp extends React.Component {
+class PersonApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,15 +37,31 @@ export default class PersonApp extends React.Component {
     this.idRef = React.createRef();
   }
   render() {
+    const { classes } = this.props
     const { personID } = this.state
     return (
-      <>
-        <input ref={this.idRef} />
-        <button onClick={this.fetchPerson} />
-        {personID
-          ? <PersonQuery personID={personID} />
-          : null}
-      </>
+      <Grid container spacing={24}>
+        <Grid container item xs={12}>
+          <Paper>
+            relay POST
+          </Paper>
+        </Grid>
+        <Grid container item xs={6} spacing={16}>
+          <Grid item xs={6}>
+            <Paper className={classes.infoPaper}>
+              <input ref={this.idRef} defaultValue='1' />
+              <button onClick={this.fetchPerson}>GET Person</button>
+            </Paper>
+          </Grid>
+          <Grid item xs={6}>
+            {personID
+            ? <PersonQuery personID={personID} />
+            : <Paper className={classes.infoPaper}><div>Loading</div></Paper>}
+          </Grid>
+        </Grid>
+        
+        
+      </Grid>
     )
   }
   fetchPerson = () => {
@@ -51,3 +71,5 @@ export default class PersonApp extends React.Component {
     }
   }
 }
+
+export default searchStyle(PersonApp)

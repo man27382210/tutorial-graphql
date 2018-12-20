@@ -1,8 +1,8 @@
-import * as React from 'react';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
-import { query as personQuery } from './queries';
+import * as React from 'react'
+import Paper from '@material-ui/core/Paper'
+import Grid from '@material-ui/core/Grid'
+import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles'
+import { query as personQuery } from './queries'
 
 const searchStyle = () => createStyles({
   pre: {
@@ -17,9 +17,9 @@ const searchStyle = () => createStyles({
 interface Props extends WithStyles<typeof searchStyle> {}
 
 interface Person {
-  person: {[key: string]: string};
-  error: boolean;
-  loading: boolean;
+  person: {[key: string]: string}
+  error: boolean
+  loading: boolean
   personID: string,
   fetchPerson?: (personID: string) => void,
   graphqlQueryString: string,
@@ -31,38 +31,38 @@ const PersonState: Person = {
   loading: true,
   personID: '1',
   graphqlQueryString: personQuery,
-};
+}
 
-const PersonContext = React.createContext(PersonState);
+const PersonContext = React.createContext(PersonState)
 
 export const SearchUser = withStyles(searchStyle)(({ classes }: Props)=> {
-  const personIDInput = React.createRef<HTMLInputElement>();
+  const personIDInput = React.createRef<HTMLInputElement>()
   return (
     <PersonContext.Consumer>
       {({fetchPerson}) => { 
         const submitPerson = () => {
-          const personID = personIDInput.current ? personIDInput.current.value : '1';
-          if (fetchPerson) fetchPerson(personID);
+          const personID = personIDInput.current ? personIDInput.current.value : '1'
+          if (fetchPerson) fetchPerson(personID)
         }
         return (
           <Paper className={classes.infoPaper}>
-            <input ref={personIDInput} defaultValue='1'/>
+            <input ref={personIDInput} defaultValue='1' />
             <button onClick={submitPerson}> GET Person </button>
           </Paper>
         )
       }}
     </PersonContext.Consumer>
   )
-});
+})
 
 export const Person = withStyles(searchStyle)(({ classes }: Props)=> {
-  const renderLoading:() => JSX.Element = (): JSX.Element  => <Paper className={classes.infoPaper}><div>Loading</div></Paper>;
-  const renderNoData:() => JSX.Element = (): JSX.Element  => <Paper className={classes.infoPaper}><div>No data</div></Paper>;
+  const renderLoading:() => JSX.Element = (): JSX.Element  => <Paper className={classes.infoPaper}><div>Loading</div></Paper>
+  const renderNoData:() => JSX.Element = (): JSX.Element  => <Paper className={classes.infoPaper}><div>No data</div></Paper>
   return (
       <PersonContext.Consumer>
         {({error, loading, person}) => {
-          if (loading) return renderLoading();
-          if (error) return renderNoData();
+          if (loading) return renderLoading()
+          if (error) return renderNoData()
           return (
             <Paper className={classes.infoPaper}>
               <div>{person.name}</div>
@@ -85,11 +85,11 @@ export const Person = withStyles(searchStyle)(({ classes }: Props)=> {
           )
         }}
       </PersonContext.Consumer>    
-  );
-});
+  )
+})
 
 class PersonApp extends React.Component<Props, Person> {
-  state = PersonState;
+  state = PersonState
   public render () {
     const { classes } = this.props
     const { personID } = this.state
@@ -168,4 +168,4 @@ class PersonApp extends React.Component<Props, Person> {
   }
 }
 
-export default withStyles(searchStyle)(PersonApp);
+export default withStyles(searchStyle)(PersonApp)

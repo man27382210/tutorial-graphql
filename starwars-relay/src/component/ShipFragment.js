@@ -5,7 +5,7 @@ import { ShipInfo as ShipInfoQuery } from '../queries/shipInfo'
 const ShipInfo = (props) => {
   console.log(props)
   const shipInfo = props.data
-  return (<div>{shipInfo.name}</div>)
+  return (<li>{shipInfo.name}</li>)
 }
 
 export default createFragmentContainer(
