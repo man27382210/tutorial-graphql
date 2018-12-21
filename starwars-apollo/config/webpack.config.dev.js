@@ -12,6 +12,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -263,6 +264,11 @@ module.exports = {
       watch: paths.appSrc,
       tsconfig: paths.appTsConfig,
       tslint: paths.appTsLint,
+    }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false,
+      reportFilename: path.resolve(__dirname, 'public', 'build.info.html'),
     }),
   ],
   // Some libraries import Node modules but don't use them in the browser.

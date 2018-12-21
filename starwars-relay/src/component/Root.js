@@ -59,8 +59,6 @@ class PersonApp extends React.Component {
             : <Paper className={classes.infoPaper}><div>Loading</div></Paper>}
           </Grid>
         </Grid>
-        
-        
       </Grid>
     )
   }

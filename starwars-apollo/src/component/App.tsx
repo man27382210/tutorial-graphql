@@ -1,10 +1,11 @@
-import * as React from 'react';
-import Paper from '@material-ui/core/Paper';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
-import { GetSWPersonByPersonID, GetSWPersonByPersonIDVariables } from './--schema/GetSWPersonByPersonID';
+import * as React from 'react'
+import Paper from '@material-ui/core/Paper'
+import Grid from '@material-ui/core/Grid'
+import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles'
+import { GetSWPersonByPersonID, GetSWPersonByPersonIDVariables } from './--schema/GetSWPersonByPersonID'
 import { shipInfo } from './--schema/shipInfo'
-import { SWPersonQUERY as QUERY } from './queries';
-import { Query } from 'react-apollo';
+import { SWPersonQUERY as QUERY } from './queries'
+import { Query } from 'react-apollo'
 
 class SWPerson extends Query<GetSWPersonByPersonID, GetSWPersonByPersonIDVariables> {}
 
@@ -39,10 +40,10 @@ const GraphQLPerson = (props: GraphQLPersonProps) => {
   return (
     <SWPerson query={QUERY} variables={{personID}}>
       {({ loading, data, error }) => {
-        if (loading) return renderLoading();
-        if (error) return <h1>ERROR</h1>; 
-        if (!data) return renderNoData();
-        const { person } = data;
+        if (loading) return renderLoading()
+        if (error) return <h1>ERROR</h1> 
+        if (!data) return renderNoData()
+        const { person } = data
         return person ? (
           <Paper className={classes.infoPaper}>
             <div>{person.name}</div>
@@ -75,7 +76,7 @@ export const App = withStyles(searchStyle)(
       loading: true,
       error: false,
     }
-    personIDInput = React.createRef<HTMLInputElement>();
+    personIDInput = React.createRef<HTMLInputElement>()
 
     submitPerson = () => {
       if (this.personIDInput.current) {
@@ -87,23 +88,34 @@ export const App = withStyles(searchStyle)(
       const { classes } = this.props
       const { loading, error, personID } = this.state
       return (
-        <React.Fragment>
-          <Paper className={classes.infoPaper}>
-            <input ref={this.personIDInput} defaultValue='1'/>
-            <button onClick={this.submitPerson}> GET Person </button>
-          </Paper>
-          <Paper>
-            {error
-              ? renderError()
-              : !loading && personID.length > 0
-                ? <GraphQLPerson {...{classes, personID}}/>
-                : renderLoading()
-            }
-          </Paper>
-        </React.Fragment>
-      );
+        <Grid container spacing={24}>
+          <Grid container item xs={12}>
+            <Paper>
+              apollo POST
+            </Paper>
+          </Grid>
+          <Grid container item xs={6} spacing={16}>
+            <Grid item xs={6}>
+              <Paper className={classes.infoPaper}>
+                <input ref={this.personIDInput} defaultValue='1'/>
+                <button onClick={this.submitPerson}> GET Person </button>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper>
+                {error
+                  ? renderError()
+                  : !loading && personID.length > 0
+                    ? <GraphQLPerson {...{classes, personID}}/>
+                    : renderLoading()
+                }
+              </Paper>
+            </Grid>
+          </Grid>
+        </Grid>
+      )
     }
   }
-);
+)
 
-export default App;
+export default App

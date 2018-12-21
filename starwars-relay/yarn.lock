@@ -882,7 +882,7 @@ acorn-dynamic-import@^3.0.0:
   dependencies:
     acorn "^5.0.0"
 
-acorn@^5.0.0, acorn@^5.6.2:
+acorn@^5.0.0, acorn@^5.6.2, acorn@^5.7.3:
   version "5.7.3"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/acorn/-/acorn-5.7.3.tgz#67aa231bf8812974b85235a96771eb6bd07ea279"
 
@@ -1012,6 +1012,10 @@ assign-symbols@^1.0.0:
 async-each@^1.0.0:
   version "1.0.1"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/async-each/-/async-each-1.0.1.tgz#19d386a1d9edc6e7c1c85d388aedbcc56d33602d"
+
+async-limiter@~1.0.0:
+  version "1.0.0"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/async-limiter/-/async-limiter-1.0.0.tgz#78faed8c3d074ab81f22b4e985d79e8738f720f8"
 
 async@^1.5.2:
   version "1.5.2"
@@ -1433,6 +1437,15 @@ batch@0.6.1:
   version "0.6.1"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/batch/-/batch-0.6.1.tgz#dc34314f4e679318093fc760272525f94bf25c16"
 
+bfj@^6.1.1:
+  version "6.1.1"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/bfj/-/bfj-6.1.1.tgz#05a3b7784fbd72cfa3c22e56002ef99336516c48"
+  dependencies:
+    bluebird "^3.5.1"
+    check-types "^7.3.0"
+    hoopy "^0.1.2"
+    tryer "^1.0.0"
+
 big.js@^3.1.3:
   version "3.2.0"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/big.js/-/big.js-3.2.0.tgz#a5fc298b81b9e0dca2e458824784b65c52ba588e"
@@ -1691,6 +1704,10 @@ change-emitter@^0.1.2:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/change-emitter/-/change-emitter-0.1.6.tgz#e8b2fe3d7f1ab7d69a32199aff91ea6931409515"
 
+check-types@^7.3.0:
+  version "7.4.0"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/check-types/-/check-types-7.4.0.tgz#0378ec1b9616ec71f774931a3c6516fad8c152f4"
+
 chokidar@^2.0.0, chokidar@^2.0.2:
   version "2.0.4"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/chokidar/-/chokidar-2.0.4.tgz#356ff4e2b0e8e43e322d18a372460bbcf3accd26"
@@ -1777,7 +1794,7 @@ color-name@1.1.3:
   version "1.1.3"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
 
-commander@^2.8.1:
+commander@^2.18.0, commander@^2.8.1:
   version "2.19.0"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/commander/-/commander-2.19.0.tgz#f6198aa84e5b83c46054b94ddedbfed5ee9ff12a"
 
@@ -2139,6 +2156,10 @@ domain-browser@^1.1.1:
   version "1.2.0"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/domain-browser/-/domain-browser-1.2.0.tgz#3d31f50191a6749dd1375a7f522e823d42e54eda"
 
+duplexer@^0.1.1:
+  version "0.1.1"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
+
 duplexify@^3.4.2, duplexify@^3.6.0:
   version "3.6.1"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/duplexify/-/duplexify-3.6.1.tgz#b1a7a29c4abfd639585efaecce80d666b1e34125"
@@ -2151,6 +2172,10 @@ duplexify@^3.4.2, duplexify@^3.6.0:
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
+
+ejs@^2.6.1:
+  version "2.6.1"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
 
 electron-to-chromium@^1.3.92:
   version "1.3.95"
@@ -2443,6 +2468,10 @@ figgy-pudding@^3.1.0, figgy-pudding@^3.5.1:
   version "3.5.1"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/figgy-pudding/-/figgy-pudding-3.5.1.tgz#862470112901c727a0e495a80744bd5baa1d6790"
 
+filesize@^3.6.1:
+  version "3.6.1"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/filesize/-/filesize-3.6.1.tgz#090bb3ee01b6f801a8a8be99d31710b3422bb317"
+
 fill-range@^4.0.0:
   version "4.0.0"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/fill-range/-/fill-range-4.0.0.tgz#d544811d428f98eb06a63dc402d2403c328c38f7"
@@ -2651,6 +2680,13 @@ graphql@^14.0.2:
   dependencies:
     iterall "^1.2.2"
 
+gzip-size@^5.0.0:
+  version "5.0.0"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/gzip-size/-/gzip-size-5.0.0.tgz#a55ecd99222f4c48fd8c01c625ce3b349d0a0e80"
+  dependencies:
+    duplexer "^0.1.1"
+    pify "^3.0.0"
+
 handle-thing@^1.2.5:
   version "1.2.5"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/handle-thing/-/handle-thing-1.2.5.tgz#fd7aad726bf1a5fd16dfc29b2f7a6601d27139c4"
@@ -2747,6 +2783,10 @@ homedir-polyfill@^1.0.1:
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/homedir-polyfill/-/homedir-polyfill-1.0.1.tgz#4c2bbc8a758998feebf5ed68580f76d46768b4bc"
   dependencies:
     parse-passwd "^1.0.0"
+
+hoopy@^0.1.2:
+  version "0.1.4"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/hoopy/-/hoopy-0.1.4.tgz#609207d661100033a9a9402ad3dea677381c1b1d"
 
 hosted-git-info@^2.1.4:
   version "2.7.1"
@@ -3740,6 +3780,10 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
   dependencies:
     wrappy "1"
+
+opener@^1.5.1:
+  version "1.5.1"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/opener/-/opener-1.5.1.tgz#6d2f0e77f1a0af0032aca716c2c1fbb8e7e8abed"
 
 opn@^5.1.0:
   version "5.4.0"
@@ -4879,6 +4923,10 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
+tryer@^1.0.0:
+  version "1.0.1"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
+
 tslib@^1.9.0:
   version "1.9.3"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
@@ -5069,6 +5117,23 @@ wbuf@^1.1.0, wbuf@^1.7.2:
   dependencies:
     minimalistic-assert "^1.0.0"
 
+webpack-bundle-analyzer@^3.0.3:
+  version "3.0.3"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/webpack-bundle-analyzer/-/webpack-bundle-analyzer-3.0.3.tgz#dbc7fff8f52058b6714a20fddf309d0790e3e0a0"
+  dependencies:
+    acorn "^5.7.3"
+    bfj "^6.1.1"
+    chalk "^2.4.1"
+    commander "^2.18.0"
+    ejs "^2.6.1"
+    express "^4.16.3"
+    filesize "^3.6.1"
+    gzip-size "^5.0.0"
+    lodash "^4.17.10"
+    mkdirp "^0.5.1"
+    opener "^1.5.1"
+    ws "^6.0.0"
+
 webpack-cli@^3.1.2:
   version "3.1.2"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/webpack-cli/-/webpack-cli-3.1.2.tgz#17d7e01b77f89f884a2bbf9db545f0f6a648e746"
@@ -5220,6 +5285,12 @@ wrap-ansi@^2.0.0:
 wrappy@1:
   version "1.0.2"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
+
+ws@^6.0.0:
+  version "6.1.2"
+  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/ws/-/ws-6.1.2.tgz#3cc7462e98792f0ac679424148903ded3b9c3ad8"
+  dependencies:
+    async-limiter "~1.0.0"
 
 xregexp@4.0.0:
   version "4.0.0"

@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 
 export const SWPersonQUERY = gql`
   query GetSWPersonByPersonID($personID: ID){
@@ -26,6 +26,6 @@ export const SWPersonQUERY = gql`
       name
       starshipClass
   }
-`;
+`
 
 
