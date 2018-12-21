@@ -120,7 +120,7 @@ module.exports = {
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
         openAnalyzer: false,
-        reportFilename: path.resolve(__dirname, 'public', 'build.info.html'),
+        reportFilename: path.resolve(__dirname, '..', 'public', 'build.info.html'),
       }),
     ],
   },

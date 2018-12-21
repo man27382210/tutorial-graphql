@@ -36,16 +36,16 @@ const renderLoading = () => <div>Loading</div>
 const renderError = () => <h1>ERROR</h1>
 
 const GraphQLPerson = (props: GraphQLPersonProps) => {
-  const { personID, classes } = props
+  const { personID } = props
   return (
     <SWPerson query={QUERY} variables={{personID}}>
       {({ loading, data, error }) => {
         if (loading) return renderLoading()
-        if (error) return <h1>ERROR</h1> 
+        if (error) return renderError()
         if (!data) return renderNoData()
         const { person } = data
         return person ? (
-          <Paper className={classes.infoPaper}>
+          <div >
             <div>{person.name}</div>
             <div>Start ship:</div>
             <ul>
@@ -62,7 +62,7 @@ const GraphQLPerson = (props: GraphQLPersonProps) => {
                 : renderNoData()
               }
             </ul>
-          </Paper>
+          </div>
         ) : renderNoData()
       }}
     </SWPerson>
@@ -102,7 +102,7 @@ export const App = withStyles(searchStyle)(
               </Paper>
             </Grid>
             <Grid item xs={6}>
-              <Paper>
+              <Paper className={classes.infoPaper}>
                 {error
                   ? renderError()
                   : !loading && personID.length > 0

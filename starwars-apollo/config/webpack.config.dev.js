@@ -268,7 +268,7 @@ module.exports = {
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       openAnalyzer: false,
-      reportFilename: path.resolve(__dirname, 'public', 'build.info.html'),
+      reportFilename: path.resolve(__dirname, '..', 'public', 'build.info.html'),
     }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
