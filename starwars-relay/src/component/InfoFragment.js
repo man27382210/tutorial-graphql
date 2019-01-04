@@ -14,7 +14,7 @@ const Info = searchStyle((props) => {
       <ul>
         {person.starshipConnection && person.starshipConnection.starships
           ? person.starshipConnection.starships.map((starShip, starShipIndex) => {
-            return (<ShipFragment key={`starShip-${starShipIndex}`} data={starShip}/>)
+            return <ShipFragment key={`starShip-${starShipIndex}`} data={starShip}/>
           })
           : null
         }
