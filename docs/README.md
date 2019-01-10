@@ -11,4 +11,13 @@ With this training, you will learn about basic GraphQL Client side implementatio
 ## What you will learn
 
 * Quick GraphQL introduce
-* Implement GraphQL Client with different ways.
+* Share different ways for implement GraphQL client.
+	* Base on Star Wars api
+	* GraphQL Basic usage
+	* Apollo
+	* Relay
+* Advanced
+	* Pagination
+	* Graph explain
+* Ichiba example
+* Future

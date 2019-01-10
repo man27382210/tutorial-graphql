@@ -1,0 +1,28 @@
+{
+  "apps": [
+    {
+        "name": "swapi-graphql",
+        "cwd": "./swapi-graphql",
+        "script": "npm",
+        "args": "start"
+    },
+    {
+      "name": "starwars-apollo",
+      "cwd": "./starwars-apollo",
+      "script": "npm",
+      "args": "start"
+    },
+    {
+      "name": "starwars-relay",
+      "cwd": "./starwars-relay",
+      "script": "npm",
+      "args": "start"
+    },
+    {
+      "name": "starwars-normal",
+      "cwd": "./starwars-normal",
+      "script": "npm",
+      "args": "start"
+    }
+  ]
+}
