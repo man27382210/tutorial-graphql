@@ -6,9 +6,6 @@
   "directories": {
     "doc": "docs"
   },
-  "scripts": {
-    "start_graphql": "PORT=5000 node ./swapi-graphql/lib/server/main.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/man27382210/tutorial-graphql.git"
@@ -20,7 +17,6 @@
   },
   "homepage": "https://github.com/man27382210/tutorial-graphql#readme",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
     "pm2": "^3.2.7"
   }
 }

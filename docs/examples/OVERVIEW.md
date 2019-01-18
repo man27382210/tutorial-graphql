@@ -51,7 +51,7 @@ Struct
 ```
 
 ## Problem
-In REST api, each detail information needs to aleast one more api call scuh as:
+In REST api, each detail information needs to at least one more api call such as:
 
 ```
 ...
@@ -70,7 +70,7 @@ Promise.all(person.starships.map(url =>
 
 ```
 
-Of course we can use aggregation either composition,
+Of course we can use aggregation either composition api way,
 but in GraphQL world just use nested structure with one call to get all information you want:
 
 ```

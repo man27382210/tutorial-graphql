@@ -16,4 +16,4 @@
   * [4.1 - Mutation](advanced/mutation.md)
   * [4.2 - Pagination](advanced/pagination.md)
   * [4.2 - Streaming](advanced/streaming.md)
-* [5 - Ichiba example](example/ichiba.md)
+* [5 - Unit test](test/README.md)
