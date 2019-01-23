@@ -1,22 +1,109 @@
-# What is Redux ?
+# Play with Star wars GraphQL ?
 
-**[Redux](https://github.com/reduxjs/redux)** is a state management tool for JavaScript applications.
-While it is frequently used with React, it is compatible with many other React-like frameworks such as [Preact](https://github.com/developit/preact), [Vue](https://github.com/vuejs/vue) as well as Angular and even just plain JavaScript.
-The main concept behind Redux is that the entire state of an application is stored in one central location.
-Each component of an application can have direct access to the state of the application without having to send props down to child components or using callback functions to send data back up to a parent.
+[Star wars GraphQL API](https://github.com/graphql/swapi-graphql) is based on [Star wars REST API](https://swapi.co/),
+which is GraphQL Getway with cache and build with NodeJS.
 
-Official website: [https://redux.js.org/](https://redux.js.org/)
+For more detail, check the link and fork on github.
 
-### Highly recommended online Redux tutorials
-* Redux creator Dan Abramov's free **["Getting Started with Redux"](https://egghead.io/series/getting-started-with-redux)** video series on Egghead.io
-* **[Modern React with Redux](https://www.udemy.com/react-redux/)** and **[Advanced React and Redux](https://www.udemy.com/react-redux-tutorial/)** from Stephen Grider on Udemy
+## Start you local GraphQL dashboard
 
-### Other:
-* [Awesome](https://github.com/xgrommx/awesome-redux) list of Redux examples and middlewares
-* Redux co-maintainer Mark Erikson's ["Redux Fundamentals" slideshow](http://blog.isquaredsoftware.com/2018/03/presentation-reactathon-redux-fundamentals/) and [list of suggested resources for learning Redux](http://blog.isquaredsoftware.com/2017/12/blogged-answers-learn-redux/)
-* If you learn best by looking at code and playing with it, check out our list of [Redux example applications](https://redux.js.org/introduction/examples), available as separate projects in the Redux repo, and also as interactive online examples on CodeSandbox.
-* The [Redux Tutorials](https://github.com/markerikson/react-redux-links/blob/master/redux-tutorials.md) section of the [React/Redux links list](https://github.com/markerikson/react-redux-links).  Here's a top list of our recommended tutorials:
-    - Dave Ceddia's posts [What Does Redux Do? (and when should you use it?)](https://daveceddia.com/what-does-redux-do/) and [How Redux Works: A Counter-Example](https://daveceddia.com/how-does-redux-work/) are a great intro to the basics of Redux and how to use it with React, as is this post on [React and Redux: An Introduction](http://jakesidsmith.com/blog/post/2017-11-18-redux-and-react-an-introduction/).
-    - Valentino Gagliardi's post [React Redux Tutorial for Beginners: Learning Redux in 2018](https://www.valentinog.com/blog/react-redux-tutorial-beginners/) is an excellent extended introduction to many aspects of using Redux.
-    - The CSS Tricks article [Leveling Up with React: Redux](https://css-tricks.com/learning-react-redux/) covers the Redux basics well.
-    - This [DevGuides: Introduction to Redux](http://devguides.io/redux/) tutorial covers several aspects of Redux, including actions, reducers, usage with React, and middleware.
+```
+$ cd swapi-graphql/
+
+$ yarn run start
+
+// or
+
+$ ./pm2 start pm2_app.json
+```
+
+On [http://localhost:5000](http://localhost:5000) you can see the GraphQL dashboard.
+
+![Dashboard](../gitbook/images/GraphQL_dashboard.png)
+
+On the right bar we can see `Documentation explorer`:
+
+![Documentation_explorer](../gitbook/images/Document_explorer.png)
+
+Which we can go through all schema and see query rule and expect response data type and defined.
+
+Lets see one example `allFilms`
+
+![allFilms_1](../gitbook/images/allFilms_1.png)
+
+![allFilms_2](../gitbook/images/allFilms_2.png)
+
+Leave term `connection` and those arguments for `allFilms` until `Relay` to explain,
+here what we see is:
+
+- Before colon is field name and arguments with type.
+- After colon is return type.
+- Click on the return type, we can see response field we can get.
+	![allFilms_3](../gitbook/images/allFilms_3.png)
+	- We focus on `Film`, it's a array object, which will return an array of film object. When click on it and we can see more detail.
+		- Here we have `title`, `episodeID`...etc, which we can build a query object as below:
+
+Query
+
+```
+query {
+  allFilms {
+    films {
+      title
+      director
+    }
+  }
+}
+```
+
+Response
+
+```
+{
+  "data": {
+    "allFilms": {
+      "films": [
+        {
+          "title": "A New Hope",
+          "director": "George Lucas"
+        },
+        {
+          "title": "The Empire Strikes Back",
+          "director": "Irvin Kershner"
+        },
+        {
+          "title": "Return of the Jedi",
+          "director": "Richard Marquand"
+        },
+        {
+          "title": "The Phantom Menace",
+          "director": "George Lucas"
+        },
+        {
+          "title": "Attack of the Clones",
+          "director": "George Lucas"
+        },
+        {
+          "title": "Revenge of the Sith",
+          "director": "George Lucas"
+        },
+        {
+          "title": "The Force Awakens",
+          "director": "J. J. Abrams"
+        }
+      ]
+    }
+  }
+}
+```
+
+## Play yourself
+
+When you try to typing anything on query field, GraphQL will prompt you about what kind of field you can use.
+
+![prompt_image](../gitbook/images/prompt_image.png)
+
+please try to get different information!
+
+Next we will talk about implement in really JS.
+
