@@ -1,22 +1,55 @@
-# What is Redux ?
+# What is GraphQL ?
 
-**[Redux](https://github.com/reduxjs/redux)** is a state management tool for JavaScript applications.
-While it is frequently used with React, it is compatible with many other React-like frameworks such as [Preact](https://github.com/developit/preact), [Vue](https://github.com/vuejs/vue) as well as Angular and even just plain JavaScript.
-The main concept behind Redux is that the entire state of an application is stored in one central location.
-Each component of an application can have direct access to the state of the application without having to send props down to child components or using callback functions to send data back up to a parent.
+**[GraphQL](https://graphql.org/)** GraphQL is a query language for your API
 
-Official website: [https://redux.js.org/](https://redux.js.org/)
+GraphQL service is created by defining types and fields on those types, then providing functions for each field on each type.
 
-### Highly recommended online Redux tutorials
-* Redux creator Dan Abramov's free **["Getting Started with Redux"](https://egghead.io/series/getting-started-with-redux)** video series on Egghead.io
-* **[Modern React with Redux](https://www.udemy.com/react-redux/)** and **[Advanced React and Redux](https://www.udemy.com/react-redux-tutorial/)** from Stephen Grider on Udemy
+Make an example, a GraphQL service that tells us who the logged in user is as well as that user's name:
 
-### Other:
-* [Awesome](https://github.com/xgrommx/awesome-redux) list of Redux examples and middlewares
-* Redux co-maintainer Mark Erikson's ["Redux Fundamentals" slideshow](http://blog.isquaredsoftware.com/2018/03/presentation-reactathon-redux-fundamentals/) and [list of suggested resources for learning Redux](http://blog.isquaredsoftware.com/2017/12/blogged-answers-learn-redux/)
-* If you learn best by looking at code and playing with it, check out our list of [Redux example applications](https://redux.js.org/introduction/examples), available as separate projects in the Redux repo, and also as interactive online examples on CodeSandbox.
-* The [Redux Tutorials](https://github.com/markerikson/react-redux-links/blob/master/redux-tutorials.md) section of the [React/Redux links list](https://github.com/markerikson/react-redux-links).  Here's a top list of our recommended tutorials:
-    - Dave Ceddia's posts [What Does Redux Do? (and when should you use it?)](https://daveceddia.com/what-does-redux-do/) and [How Redux Works: A Counter-Example](https://daveceddia.com/how-does-redux-work/) are a great intro to the basics of Redux and how to use it with React, as is this post on [React and Redux: An Introduction](http://jakesidsmith.com/blog/post/2017-11-18-redux-and-react-an-introduction/).
-    - Valentino Gagliardi's post [React Redux Tutorial for Beginners: Learning Redux in 2018](https://www.valentinog.com/blog/react-redux-tutorial-beginners/) is an excellent extended introduction to many aspects of using Redux.
-    - The CSS Tricks article [Leveling Up with React: Redux](https://css-tricks.com/learning-react-redux/) covers the Redux basics well.
-    - This [DevGuides: Introduction to Redux](http://devguides.io/redux/) tutorial covers several aspects of Redux, including actions, reducers, usage with React, and middleware.
+```
+type UserQuery {
+  user: User
+}
+
+type User {
+  id: ID
+  name: String
+}
+```
+
+On server side, really query method will like this:
+```
+function Query_user(request) {
+  return request.auth.user;
+}
+
+function User_name(user) {
+  return user.getName();
+}
+```
+
+Once GraphQL service is running (sever side), it allow to send a GraphQL queries.
+A received query is first checked to ensure it only refers to the types and fields defined, then runs the provided functions to produce a result.
+
+Query example:
+```
+{
+  user {
+    name
+  }
+}
+```
+
+Result json: 
+```
+{
+  "user": {
+    "name": "Luke Skywalker"
+  }
+}
+```
+
+Official website learn: [https://graphql.org/learn/](https://graphql.org/learn/)
+
+### Recommended online GraphQL tutorials
+[The Fullstack Tutorial for GraphQL](https://www.howtographql.com)
