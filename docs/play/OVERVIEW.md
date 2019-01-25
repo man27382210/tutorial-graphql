@@ -1,9 +1,9 @@
-#Let's play with GraphQL client !
+# Star Wars API
 In this section,
 will base on [swap api](https://swapi.co/) and play/compare with different ways.
 
 ## Star wars API
-Struct
+Structure
 
 - Planets
 - Spaceships

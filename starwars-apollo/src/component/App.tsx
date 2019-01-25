@@ -28,7 +28,7 @@ interface State {
 }
 
 interface GraphQLPersonProps extends Props {
-  personID: string 
+  personID: string
 }
 
 const renderNoData = () => <div>No data</div>

@@ -33,8 +33,10 @@ Lets see one example `allFilms`
 
 ![allFilms_2](../gitbook/images/allFilms_2.png)
 
-Leave term `connection` and those arguments for `allFilms` until `Relay` to explain,
-here what we see is:
+Leave term which has `connection` prefix and those arguments for `allFilms` until `Relay` to explain more detail,
+here simple explain about `connection` is a `meta` data describe relation between two node.
+
+Keep looking at `allFilms`:
 
 - Before colon is field name and arguments with type.
 - After colon is return type.

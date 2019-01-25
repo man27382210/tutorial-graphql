@@ -134,6 +134,7 @@ class PersonApp extends React.Component<Props, Person> {
       </PersonContext.Provider>
     )
   }
+  
   private fetchPerson = (personID: string) => {
     if(fetch) {
       fetch('http://localhost:5000/', 
@@ -152,18 +153,23 @@ class PersonApp extends React.Component<Props, Person> {
       })
       .then((res: Response) => res.json())
       .then((result: {[key: string]: string}) => {
-        this.setState({
-          person: result.data['person'],
-          loading: false,
-          error: false,
-          personID: personID
-        })
+        try {
+          const resultObject = {
+            person: result.data['person'],
+            loading: false,
+            error: false,
+            personID: personID
+          }
+          this.setState(resultObject)
+        } catch {
+          throw Error
+        }
       })
       .catch((e: Error) => {
-        this.setState({error: true})
+        this.setState({loading: false, error: true})
       })
     } else {
-      this.setState({error: true})
+      this.setState({loading: false, error: true})
     }
   }
 }
