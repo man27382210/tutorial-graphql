@@ -1,11 +1,11 @@
 # Play with Star wars GraphQL ?
 
 [Star wars GraphQL API](https://github.com/graphql/swapi-graphql) is based on [Star wars REST API](https://swapi.co/),
-which is GraphQL Getway with cache and build with NodeJS.
+which is GraphQL Gateway with cache and build by NodeJS.
 
 For more detail, check the link and fork on github.
 
-## Start you local GraphQL dashboard
+## Start you local GraphQL Dashboard
 
 ```
 $ cd swapi-graphql/
@@ -14,7 +14,7 @@ $ yarn run start
 
 // or
 
-$ ./pm2 start pm2_app.json
+$ ./pm2 start pm2_app.json // Will start all web server and GraphQL server.
 ```
 
 On [http://localhost:5000](http://localhost:5000) you can see the GraphQL dashboard.
@@ -99,13 +99,13 @@ Response
 }
 ```
 
-## Play yourself
+## Try
 
-When you try to typing anything on query field, GraphQL will prompt you about what kind of field you can use.
+When you try to typing anything on query field, GraphQL dashboard will prompt you about what kind of field can use.
 
 ![prompt_image](../gitbook/images/prompt_image.png)
 
-please try to get different information!
+Please try to get different information!
 
 Next we will talk about implement in really JS.
 

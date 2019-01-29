@@ -10,83 +10,204 @@ For this example, we will use `Apollo Client` to get Star Wars info.
 
 ## Introduction
 
+Apollo is a product build by Meteor Development Group, which have Server side (mostly is NodeJS and Golang), Client side (JS, React, Angular, Vue, Android, iOS) and PaaS support.
+
+[Apollo Client](https://github.com/apollographql/apollo-client) using Typescript,
+Apollo Client have related library, each library deal with different things such as network connection, cache...etc,
+here we use 
+
+
+- apollo-client -> Create an Apollo client main object.
+- apollo-link-http -> Create ApolloLink object, which will dealing with http connection.
+- apollo-cache-inmemory -> Create GraphQL request cache object.
+- react-apollo -> React HOC, using context way, also can be use in recompose way.
+- apollo -> Command line tool, use this to generate type.
+
+
+Apollo Client support strong type check,
+but we need the GraphQL schema from server for helping us generate strong type,
+this project use `get-graphql-schema` (which is localhost:5000 for this example) to get the schema,
+will talk more detail later.
+
+
 ## Preparation
 
-Start GraphQL basic server
+Before started,
+we need to get schema from Server to generate type.
+
+#### Launch GraphQL server
 
 ```
-$ ./pm2 start pm2_app.json
-or
-$ cd starwars-normal && yarn run start
+$ cd swapi-graphql && yarn run start
 ```
 
-It will run on [http://localhost:3000](http://localhost:3000)
+#### Get the sechma from server
+
+Now we can get the sechma, `get-graphql-schema` support GraphQL type or JSON type, In this example we use graphql type.
+
+```
+$ yarn run get-schema-graphql
+```
+This command will generate a `schema.graphql` file under `src/`,
+look deep into it you can see the type definition of each field.
+
+
+#### Generated TypeScript type
+
+After get the schema, we will use `apollo` command to generated TypeScript type base on our query.
+
+Query file is under `src/component/queries.ts`, in the `queries.ts` file we use [graphql-tag](https://github.com/apollographql/graphql-tag) to define the query.
+
+`graphql-tag` will made query become AST(Abstract Syntax Tree), it's easy for `apollo` command to pares our query and generate type.
+
+Run command
+
+```
+$ yarn run apollo-types
+```
+
+Look deep into this command
+
+```
+apollo client:codegen --localSchemaFile=src/schema.graphql --target typescript --queries=src/**/*.ts --outputFlat=src/component/--schema
+```
+
+`apollo client:codegen` need `--localSchemaFile` which is we grab from starwars server and target to `typescript`, here you can choose `flow/typescript`.
+
+`--queries` require our query file, `apollo` command will only parse query string with `graphql-tag`.
+
+`--outputFlat` will set the path of output type.
+
+
+#### Start Apollo
+
+```
+$ cd starwars-apollo && yarn run start
+```
+
+It will run on [http://localhost:3001](http://localhost:3001)
 
 ## Look to the code
 
 ### Target
+
 Make a input field for input personID as query variable,
 fetch person info and show on component.
 
+Same as previous section.
+
 ### Main component
 
-Whole application is base on React 16.6 new context api,
-it's high order component which has own state and you can imagine it as a Singleton pattern.
-Below is simple sudo code:
+#### src/index.tsx
+
+In `src/index.tsx`, we import different `Apollo` related library:
+
+- apollo-link-http
 
 ```
-const PersonState: Person = {
-  person: {},
-  error: false,
-  loading: true,
-  personID: '1',
-  graphqlQueryString: personQuery,
-}
+import { createHttpLink } from 'apollo-link-http'
+const graphqlUrl = 'http://localhost:5000/grahpql'
 
-const PersonContext = React.createContext(PersonState)
+const httpLink = createHttpLink({
+  uri: graphqlUrl,
+})
+```
+`apollo-link-http` create `httpLink` object. 
 
-class App extends React.Component<Props, Person> {
-  fetchPerson = () => {
-    //do fetch
-    fetch(graphql endpoint...)
-    .then(data => {
-      this.setState({person: data.person, loading: false})
-    })
-    .catch((e) => this.setState({error: true}))
-  }
+- apollo-cache-inmemory
 
-  render() {
-    return (
-      <PersonContext.Provider
-        value={
-          {
-            fetchPerson: this.fetchPerson,
-            ...this.state
-          }
-        }>
-          <Component>
-      </PersonContext.Provider>
-    )
-  }
-}
+```
+import { InMemoryCache } from 'apollo-cache-inmemory'
+const cache = new InMemoryCache();
+```
+`apollo-cache-inmemory` create `cache` object.
 
-const Component = () => {
+- apollo-client
+
+```
+import { ApolloClient } from 'apollo-client'
+const client = new ApolloClient({
+  cache,
+  link: httpLink
+})
+```
+
+`apollo-client` create `client` object which has params cache and link.
+
+- react-apollo
+
+```
+import { ApolloProvider } from 'react-apollo'
+export default () => (
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>
+)
+```
+
+`react-apollo` provide `ApolloProvider`, give a client and wrapper our App.
+This is react context way which we can got the response from child element.
+
+#### src/App.tsx
+
+```
+import { GetSWPersonByPersonID, GetSWPersonByPersonIDVariables } from './--schema/GetSWPersonByPersonID'
+import { shipInfo } from './--schema/shipInfo'
+import { SWPersonQUERY as QUERY } from './queries'
+import { Query } from 'react-apollo'
+
+class SWPerson extends Query<GetSWPersonByPersonID, GetSWPersonByPersonIDVariables> {}
+
+const GraphQLPerson = (props: GraphQLPersonProps) => {
+  const { personID } = props
   return (
-    <PersonContext.Consumer>
-    {({ loading, error, person }) => {
-      if(loading) return (<>loading</>)
-      if(error) return (<>error</>)
-      return (<>{person}</>)
-    }}
-    </PersonContext.Consumer>
+    <SWPerson query={QUERY} variables={{personID}}>
+      {({ loading, data, error }) => {
+        if (loading) return renderLoading()
+        if (error) return renderError()
+        if (!data) return renderNoData()
+        const { person } = data
+        return person ? (
+          <div >
+            <div>{person.name}</div>
+            <div>Start ship:</div>
+            <ul>
+              {person.starshipConnection &&
+              person.starshipConnection.starships &&
+              person.starshipConnection.starships.length > 0
+                ? person.starshipConnection.starships
+                    .map((ship: shipInfo, shipIndex: number)  => 
+                    (
+                      <li key={`shipIndex-${shipIndex}`}>
+                        <div>{ship.name}</div>
+                      </li>
+                    ))
+                : renderNoData()
+              }
+            </ul>
+          </div>
+        ) : renderNoData()
+      }}
+    </SWPerson>
   )
 }
 ```
 
-With this setting,
-Component is in Context API lifecycle,
-once any async function trigger and change state,
-Component will re-render with new state.
+`GetSWPersonByPersonID` and `GetSWPersonByPersonIDVariables` are types from `'./--schema/GetSWPersonByPersonID'`:
+
+```
+export interface GetSWPersonByPersonID {
+  person: GetSWPersonByPersonID_person | null;
+}
+
+export interface GetSWPersonByPersonIDVariables {
+  personID?: string | null;
+}
+```
+
+It define interface of response data format and query variables,
+which we need to assign to 
+
 
 ### Input Field Component
 

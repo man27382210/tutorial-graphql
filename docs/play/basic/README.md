@@ -10,11 +10,15 @@ For this example, we will use `fetch` to get Star Wars info.
 
 ## Preparation
 
-Start GraphQL basic server
+Start GraphQL server
 
 ```
-$ ./pm2 start pm2_app.json
-or
+$ cd swapi-graphql && yarn run start
+```
+
+Start GraphQL basic web server
+
+```
 $ cd starwars-normal && yarn run start
 ```
 
@@ -285,6 +289,11 @@ so will go to error case.
   this.setState({loading: false, error: true})
 })
 ```
+
+## Pratice
+
+Please try to fetch more information by update the schema,
+also you can try to get other root field such film...etc.
 
 ## Overall
 
