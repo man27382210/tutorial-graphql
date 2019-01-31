@@ -7,6 +7,8 @@ For this example, we will use `Apollo Client` to get Star Wars info.
 1. [Introduction of Apollo](#Introduction)
 2. [Preparation](#preparation)
 3. [Look to the code](#start-development)
+4. [Pratice](#pratice)
+5. [Unit Test](#unit-test)
 
 ## Introduction
 
@@ -85,7 +87,7 @@ apollo client:codegen --localSchemaFile=src/schema.graphql --target typescript -
 $ cd starwars-apollo && yarn run start
 ```
 
-It will run on [http://localhost:3001](http://localhost:3001)
+Webpack dev server will run on [http://localhost:3001](http://localhost:3001)
 
 ## Look to the code
 
@@ -153,7 +155,7 @@ This is react context way which we can got the response from child element.
 ```
 import { GetSWPersonByPersonID, GetSWPersonByPersonIDVariables } from './--schema/GetSWPersonByPersonID'
 import { shipInfo } from './--schema/shipInfo'
-import { SWPersonQUERY as QUERY } from './queries'
+import { SWPersonQUERY } from './queries'
 import { Query } from 'react-apollo'
 
 class SWPerson extends Query<GetSWPersonByPersonID, GetSWPersonByPersonIDVariables> {}
@@ -161,7 +163,7 @@ class SWPerson extends Query<GetSWPersonByPersonID, GetSWPersonByPersonIDVariabl
 const GraphQLPerson = (props: GraphQLPersonProps) => {
   const { personID } = props
   return (
-    <SWPerson query={QUERY} variables={{personID}}>
+    <SWPerson query={SWPersonQUERY} variables={{personID}}>
       {({ loading, data, error }) => {
         if (loading) return renderLoading()
         if (error) return renderError()
@@ -205,8 +207,21 @@ export interface GetSWPersonByPersonIDVariables {
 }
 ```
 
-It define interface of response data format and query variables,
-which we need to assign to 
+It define interface of response data format and query variables, which we use for create new class extends `Query` from `react-apollo`.
+
+Check `Query` in `react-apollo`, it extends `React Component` and receive two generic type interface `<TData, TVariables>`, `TDate` we assgin `GetSWPersonByPersonID` and `TVariables` assign to `GetSWPersonByPersonIDVariables`.
+
+In stateless component `GraphQLPerson`, we implement `SWPerson` with two params:
+
+- query set to `SWPersonQUERY`, `SWPersonQUERY` is query schema.
+- variables set to `{personID: personID}`, `personID` is a number from props, and with ES6 object shorthand just write `{personID}`.
+
+This component will do GraphQL fetch when mount.
+Due to `personID` is from props, component will re-fetch & re-render when `personID` value change.
+
+Same as context api, `loading`, `data` and `error` are context values we can use, each status update will re-render the component.
+
+At last, we can get `person` from data and render information.
 
 
 ### Input Field Component
@@ -214,198 +229,150 @@ which we need to assign to
 We use the other component which have input field, submit button and also register `PersonContext`.
 
 ```
-export const SearchUser = () => {
-  const personIDInput = React.createRef()
-  return (
-    <PersonContext.Consumer>
-      {({fetchPerson}) => { 
-        const submitPerson = () => {
-          const personID = personIDInput.current ? personIDInput.current.value : '1'
-          fetchPerson(personID)
-        }
-        return (
-          <>
-            <input ref={personIDInput} defaultValue='1' />
-            <button onClick={submitPerson}> GET Person </button>
-          </>
-        )
-      }}
-    </PersonContext.Consumer>
-  )
-})
+class extends React.Component<Props, State> {
+    state = {
+      personID: '',
+      loading: true,
+    }
+    personIDInput = React.createRef<HTMLInputElement>()
+
+    submitPerson = () => {
+      if (this.personIDInput.current) {
+        this.setState({personID: this.personIDInput.current.value, loading: false})
+      }
+    }
+
+    render() {
+      const { classes } = this.props
+      const { loading, personID } = this.state
+      return (
+        <Grid container spacing={24}>
+          <Grid container item xs={12}>
+            <Paper>
+              apollo POST
+            </Paper>
+          </Grid>
+          <Grid container item xs={6} spacing={16}>
+            <Grid item xs={6}>
+              <Paper className={classes.infoPaper}>
+                <input ref={this.personIDInput} defaultValue='1'/>
+                <button onClick={this.submitPerson}> GET Person </button>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper className={classes.infoPaper}>
+                {!loading && personID.length > 0
+                   ? <GraphQLPerson {...{classes, personID}}/>
+                   : renderLoading()
+                }
+              </Paper>
+            </Grid>
+          </Grid>
+        </Grid>
+      )
+    }
+  }
+```
+
+This component include `GraphQLPerson` component and it's own state.
+
+```
+submitPerson = () => {
+  if (this.personIDInput.current) {
+    this.setState({personID: this.personIDInput.current.value, loading: false})
+  }
+}
 ```
 
 Once click the button,
-`fetchPerson` will trigger and do the fetch,
-result will update context state and re-render Component to show the data or error.
+`personID` and `loading` in state will change and render `GraphQLPerson` component with new `personID` value.
 
 ### GraphQL Schema
 
-Let's focus on GraphQL query,
-see the queries file:
+In `scr/SWPerson`:
 
 ```
-query GetSWPersonByPersonID($personID: ID) {
-  person(personID: $personID) {
-    .....
-  }
-}
-```
-
-`GetSWPersonByPersonID` is operation name,
-`$personID` is query variable use in person.
-
-Here we made several `fragment` as example,
-see which `films` this person appear and what kinds of `Starship` this person has.
-
-### Fetch function
-
-Let's really look deep into Fetch function
-
-```
-import { query as personQuery } from './queries'
-
-fetchPerson = (personID) => {
-    if(fetch) {
-      fetch('http://localhost:5000/', 
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          query: personQuery,
-          variables: {
-            "personID": `${personID}`,
-          },
-        })
-      })
-      .then((res: Response) => res.json())
-      .then((result: {[key: string]: string}) => {
-        try {
-          const resultObject = {
-            person: result.data['person'],
-            loading: false,
-            error: false,
-            personID: personID
-          }
-          this.setState(resultObject)
-        } catch {
-          throw Error
-        }
-      })
-      .catch((e: Error) => {
-        this.setState({loading: false, error: true})
-      })
-    } else {
-      this.setState({loading: false, error: true})
+export const SWPersonQUERY = gql`
+  query GetSWPersonByPersonID($personID: ID){
+    person(personID: $personID) {
+      ...
     }
   }
-}
+  ...
+  `
 ```
 
-GraphQL is run with `POST` method, `personQuery` is the query schema, we put in
-query object with `query` key.
+Almost same as previous pratice,
+`SWPerson` component will helping us match `query` and `variables` and handle all fetch status in context.
 
-`personID` is put in `variables` key as an object value,
-both `query` and `variables` will using `JSON.stringify` to build `JSON` string and put in body field,
+### Type Check
 
-### Response
-
-```
-{  
-   "data":{  
-      "person":{  
-         "id":"cGVvcGxlOjE=",
-         "name":"Luke Skywalker",
-         "filmConnection":{  
-            "films":[  
-               {  
-                  "title":"A New Hope",
-                  "episodeID":4
-               },
-               {  
-                  "title":"The Empire Strikes Back",
-                  "episodeID":5
-               },
-               {  
-                  "title":"Return of the Jedi",
-                  "episodeID":6
-               },
-               {  
-                  "title":"Revenge of the Sith",
-                  "episodeID":3
-               },
-               {  
-                  "title":"The Force Awakens",
-                  "episodeID":7
-               }
-            ]
-         },
-         "starshipConnection":{  
-            "starships":[  
-               {  
-                  "name":"X-wing",
-                  "starshipClass":"Starfighter"
-               },
-               {  
-                  "name":"Imperial shuttle",
-                  "starshipClass":"Armed government transport"
-               }
-            ],
-            "totalCount":2
-         }
-      }
-   }
-}
-```
-
-Response will inside `data` object, `person` is the data we are looking for.
-With this result we can show the information of this person.
-
-### Error
-
-When schema level error occurred (not network level),
-response will include error object and show the message as example:
+With Typescript and interface of variables,
+let's make an example if variables is not the type we need.
 
 ```
-...
-fragment info on Person {
-    id
-    name
-    filmConnection {
-      films {
-        title
-        episodeIDdddd // <-- here is the error
-      }
-    }
-...
+const { personID } = props
+  const id: number = parseInt(personID, 10)
+  return (
+    <SWPerson query={SWPersonQUERY} variables={{personID: id}}>
+    ...
 ```
 
-Response
+Create a `nubmer` const and assgin to `personID`,
+TSLint will jump out type error:
 
 ```
-{
-  "errors": [
-    {
-      "message": "Cannot query field \"episodeIDdddd\" on type \"Film\". Did you mean \"episodeID\"?",
-      "locations": [
-        {
-          "line": 12,
-          "column": 9
-        }
-      ]
-    }
-  ]
-}
+[ts]
+Type '{ personID: number; }' is not assignable to type 'GetSWPersonByPersonIDVariables'.
+  Types of property 'personID' are incompatible.
+    Type 'number' is not assignable to type 'string | null | undefined'. [2322]
 ```
 
-GrahpQL server will return this message with 400 status,
-so will go to error case.
+## Pratice
+
+Like previous pratice,
+please try to fetch more information by update the schema,
+don't forget re-generate the type.
+
+## Unit test
+
+In the section, we need some step to setup and target what kind of unit test we need to wirte.
+
+### Setup
+
+Here we use `jest` and `enzyme`, it's very popular unit test tool in JS / React world.
+This project is create from `create-react-app`, which has test script setup in `package.json`: 
 
 ```
-.catch((e: Error) => {
-  this.setState({loading: false, error: true})
-})
+"scripts": {
+    ...
+    "test": "node scripts/test.js --env=jsdom",
 ```
+
+Command set `--env` as `jsdom` and in `scripts/test.js` run `jest` as global variable.
+
+Seems this Application use Apollo Client Query to do GraphQL fetch,
+there are some topic we can test:
+
+- Apollo Client Query
+	- When component mount, Query component really do fetch and render the component.
+	- `spyOn` apollo client object and make sure the fetch method really tigger.
+	- The `query` which apollo client send is same as what we expect.
+	- Component render element from mock response.
+- React Component test
+	- Not only Apollo client but also your component should be test too, use mock data or stub fetch method to make sure component render correctly.
+
+Due to above reason, we need to do some setup to make unit test easily.
+
+- `test/setup.ts` is setting up `enzyme-adapter-react-16`.
+- `test/client-mock.ts` is making a fake Apollo client by use `makeExecutableSchema`, define fake `sechma` and `resolvers` instead of request real GraphQL server.
+
+
+### Testing a Apollo Client Query in React
+
+
+
+## Reference
+- [react-apollo-client-testing](https://www.robinwieruch.de/react-apollo-client-testing/)
+
+

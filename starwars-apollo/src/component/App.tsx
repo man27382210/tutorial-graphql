@@ -4,12 +4,12 @@ import Grid from '@material-ui/core/Grid'
 import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles'
 import { GetSWPersonByPersonID, GetSWPersonByPersonIDVariables } from './--schema/GetSWPersonByPersonID'
 import { shipInfo } from './--schema/shipInfo'
-import { SWPersonQUERY as QUERY } from './queries'
+import { SWPersonQUERY } from './queries'
 import { Query } from 'react-apollo'
 
-class SWPerson extends Query<GetSWPersonByPersonID, GetSWPersonByPersonIDVariables> {}
+export class SWPerson extends Query<GetSWPersonByPersonID, GetSWPersonByPersonIDVariables> {}
 
-const searchStyle = () => createStyles({
+export const searchStyle = () => createStyles({
   pre: {
     margin: 0,
   },
@@ -19,15 +19,14 @@ const searchStyle = () => createStyles({
   }
 })
 
-interface Props extends WithStyles<typeof searchStyle> {}
+export interface Props extends WithStyles<typeof searchStyle> {}
 
-interface State {
+export interface State {
   personID: string
   loading: boolean
-  error: boolean
 }
 
-interface GraphQLPersonProps extends Props {
+export interface GraphQLPersonProps extends Partial<Props> {
   personID: string
 }
 
@@ -35,19 +34,19 @@ const renderNoData = () => <div>No data</div>
 const renderLoading = () => <div>Loading</div>
 const renderError = () => <h1>ERROR</h1>
 
-const GraphQLPerson = (props: GraphQLPersonProps) => {
+export const GraphQLPerson = (props: GraphQLPersonProps) => {
   const { personID } = props
   return (
-    <SWPerson query={QUERY} variables={{personID}}>
+    <SWPerson query={SWPersonQUERY} variables={{personID}}>
       {({ loading, data, error }) => {
         if (loading) return renderLoading()
         if (error) return renderError()
         if (!data) return renderNoData()
         const { person } = data
         return person ? (
-          <div >
+          <div>
             <div>{person.name}</div>
-            <div>Start ship:</div>
+            <div>Star Ship:</div>
             <ul>
               {person.starshipConnection &&
               person.starshipConnection.starships &&
@@ -74,7 +73,6 @@ export const App = withStyles(searchStyle)(
     state = {
       personID: '',
       loading: true,
-      error: false,
     }
     personIDInput = React.createRef<HTMLInputElement>()
 
@@ -86,12 +84,12 @@ export const App = withStyles(searchStyle)(
 
     render() {
       const { classes } = this.props
-      const { loading, error, personID } = this.state
+      const { loading, personID } = this.state
       return (
         <Grid container spacing={24}>
           <Grid container item xs={12}>
             <Paper>
-              apollo POST
+              Apollo POST
             </Paper>
           </Grid>
           <Grid container item xs={6} spacing={16}>
@@ -103,11 +101,9 @@ export const App = withStyles(searchStyle)(
             </Grid>
             <Grid item xs={6}>
               <Paper className={classes.infoPaper}>
-                {error
-                  ? renderError()
-                  : !loading && personID.length > 0
-                    ? <GraphQLPerson {...{classes, personID}}/>
-                    : renderLoading()
+                {!loading && personID.length > 0
+                  ? <GraphQLPerson {...{personID}}/>
+                  : renderLoading()
                 }
               </Paper>
             </Grid>

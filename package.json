@@ -18,5 +18,8 @@
   "homepage": "https://github.com/man27382210/tutorial-graphql#readme",
   "devDependencies": {
     "pm2": "^3.2.7"
+  },
+  "dependencies": {
+    "@types/sinon": "^7.0.5"
   }
 }

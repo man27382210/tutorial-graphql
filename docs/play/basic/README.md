@@ -6,7 +6,8 @@ For this example, we will use `fetch` to get Star Wars info.
 
 1. [Preparation](#preparation)
 2. [Look to the code](#look-to-the-code)
-3. [Overall](#overall)
+3. [Pratice](#pratice)
+4. [Overall](#overall)
 
 ## Preparation
 
