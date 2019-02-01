@@ -354,25 +354,71 @@ Command set `--env` as `jsdom` and in `scripts/test.js` run `jest` as global var
 Seems this Application use Apollo Client Query to do GraphQL fetch,
 there are some topic we can test:
 
-- Apollo Client Query
-	- When component mount, Query component really do fetch and render the component.
-	- `spyOn` apollo client object and make sure the fetch method really tigger.
-	- The `query` which apollo client send is same as what we expect.
-	- Component render element from mock response.
-- React Component test
-	- Not only Apollo client but also your component should be test too, use mock data or stub fetch method to make sure component render correctly.
+- When component mount, Query component really do fetch and render the component.
+- `spyOn` apollo client object and make sure the fetch method really tigger.
+- The `query` which apollo client send is same as what we expect.
+- Component render element from mock response.
 
-Due to above reason, we need to do some setup to make unit test easily.
+Due to above reason, we need to do some setup to make unit test work.
 
 - `test/setup.ts` is setting up `enzyme-adapter-react-16`.
 - `test/client-mock.ts` is making a fake Apollo client by use `makeExecutableSchema`, define fake `sechma` and `resolvers` instead of request real GraphQL server.
 
 
-### Testing a Apollo Client Query in React
+### Testing
 
+```
+import * as React from 'react'
+import { ApolloProvider } from 'react-apollo'
+import { mount } from 'enzyme'
 
+import '../../test/setup'
+
+import clientMock from '../../test/client-mock'
+
+import { GraphQLPerson } from './App'
+import { SWPersonQUERY } from './queries'
+
+describe('GraphQLPerson', () => {
+  it('calls the query method on Apollo Client', () => {
+    const clientMockSpy = jest.spyOn(clientMock, 'watchQuery');
+
+    mount(
+      <ApolloProvider client={clientMock}>
+        <GraphQLPerson personID={'1'} />
+      </ApolloProvider>,
+    )
+
+    expect(clientMockSpy).toHaveBeenCalled()
+    expect(clientMockSpy.mock.calls[0][0].query).toEqual(SWPersonQUERY)
+    clientMockSpy.mockRestore()
+  })
+
+  it('Render component', () => {
+    const wrapper = mount(
+      <ApolloProvider client={clientMock}>
+        <GraphQLPerson personID={'1'} />
+      </ApolloProvider>,
+    )
+    expect(wrapper.find('div').at(1).text()).toEqual('Luke Skywalker')
+  })
+})
+```
+
+Import `'../../test/setup'` for setting `Jest` as global variable, `Jest` provide `BDD`/`TDD` method so we don't need to include other library.
+
+`clientMock` is the mock client for `ApolloProvider`, which `Query` will go through this mock client.
+
+First test is to check component really call the query method and the query is what we expected when component mount.
+`spyOn` will monitoring the `clientMock` method, all query will go with `watchQuery` method in `clientMock`(Jump into `ApolloClient.d.ts`, there are all method type definition. `watchQuery` not just use in one query but also query and mutation, for more detail please check here [watchQuery vs query](https://github.com/Akryum/vue-apollo/issues/1)).
+
+`expect` the spy object has been call once.
+Also this object provide a mock instance for access to the mock's metadata, grab the query we send and compare the is it same as the query `SWPersonQUERY` we setting in component.
+
+Second is make sure component really render element, the element value should same as our mock data.
 
 ## Reference
+- [Apollo client testing](https://www.apollographql.com/docs/react/recipes/testing.html)
 - [react-apollo-client-testing](https://www.robinwieruch.de/react-apollo-client-testing/)
 
 

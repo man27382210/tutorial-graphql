@@ -37,7 +37,7 @@ const schema = `
   }
 `
 
-const resolvers = {
+export const resolvers = {
   Query: {
     person: () => ({
       id: 'cGVvcGxlOjE=',
