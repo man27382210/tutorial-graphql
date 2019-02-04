@@ -4,9 +4,8 @@ import { mount } from 'enzyme'
 
 import '../../test/setup'
 
-import clientMock, { resolvers } from '../../test/client-mock'
+import clientMock from '../../test/client-mock'
 
-import { client } from './index'
 import { GraphQLPerson } from './App'
 import { SWPersonQUERY } from './queries'
 

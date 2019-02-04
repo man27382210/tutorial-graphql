@@ -304,9 +304,8 @@ it's easy to understand and flexible, easiest fetch setting and change schema to
 But still, we have some problem need to deal with:
 
 - No cache: Means each refresh time will re-send the request.
-- Type / Schema check: There is no type / schema checking during compile time, which means we will have no ideal if schema has wrong field before we made a real request.
-- State less: In this example we use context api to control App state, is there anything more convenient then make our component more state less? 
+- Type / Schema check: There is no type / schema checking during develop/compile time, which means we will have no ideal if schema has wrong field before we made a real request.
 
-Due to those reason, GraphQL community jump out two library --> [Apollo]() / [Relay]().
+Due to those reason, GraphQL community jump out two library --> [Apollo](https://www.apollographql.com/) / [Relay](https://facebook.github.io/relay/).
 
 Next step will introduce Apollo Client and this community's echosystem.

@@ -420,5 +420,6 @@ Second is make sure component really render element, the element value should sa
 ## Reference
 - [Apollo client testing](https://www.apollographql.com/docs/react/recipes/testing.html)
 - [react-apollo-client-testing](https://www.robinwieruch.de/react-apollo-client-testing/)
+- [testing-apollos-query-component](https://blog.apollographql.com/testing-apollos-query-component-d575dc642e04)
 
 
