@@ -1,10 +1,10 @@
-# Apollo Client
+# Relay
 
-For this example, we will use `Apollo Client` to get Star Wars info.
+For this tutorial, we will use `Relay (modern)` to get Star Wars info.
 
 ## Overview
 
-1. [Introduction of Apollo](#Introduction)
+1. [Introduction of Relay](#Introduction)
 2. [Preparation](#preparation)
 3. [Look to the code](#start-development)
 4. [Pratice](#pratice)
@@ -12,30 +12,16 @@ For this example, we will use `Apollo Client` to get Star Wars info.
 
 ## Introduction
 
-Apollo is a product build by Meteor Development Group, which have Server side (mostly is NodeJS and Golang), Client side (JS, React, Angular, Vue, Android, iOS) and PaaS support.
+Relay is a framework build by Facebook.
+In the introduction, Relay is data-driven React component, not like Apollo support different platform, Relay focus on React and it's head of GraphQL development, most of new feature will implement on Relay at first.
 
-[Apollo Client](https://github.com/apollographql/apollo-client) using Typescript,
-Apollo Client have related library, each library deal with different things such as network connection, cache...etc,
-here we use 
-
-
-- apollo-client -> Create an Apollo client main object.
-- apollo-link-http -> Create ApolloLink object, which will dealing with http connection.
-- apollo-cache-inmemory -> Create GraphQL request cache object.
-- react-apollo -> React HOC, using context way, also can be use in recompose way.
-- apollo -> Command line tool, use this to generate type.
-
-
-Apollo Client support strong type check,
-but we need the GraphQL schema from server for helping us generate strong type,
-this project use `get-graphql-schema` (which is localhost:5000 for this example) to get the schema,
-will talk more detail later.
-
+Relay also allow component specify what kind of data it need only provide the data, which we can see more example in this tutorial.
 
 ## Preparation
 
-Before started,
-we need to get schema from Server to generate type.
+Before started, Relay need strong type support, not like Apollo is a option, Relay is more strictly and so far only support `Flow`.
+
+Same as previous tutorial, we need to download schema from server.
 
 #### Launch GraphQL server
 
@@ -54,40 +40,39 @@ This command will generate a `schema.graphql` file under `src/`,
 look deep into it you can see the type definition of each field.
 
 
-#### Generated TypeScript type
+#### Generated Flow type
 
-After get the schema, we will use `apollo` command to generated TypeScript type base on our query.
+After get the schema, we will use `relay-compiler` command to generated Flow type base on our query.
 
-Query file is under `src/component/queries.ts`, in the `queries.ts` file we use [graphql-tag](https://github.com/apollographql/graphql-tag) to define the query.
+Query file is under `src/component/queries/*.js`.
 
-`graphql-tag` will made query become AST(Abstract Syntax Tree), it's easy for `apollo` command to pares our query and generate type.
+Remember we introduce `Fragment` in [2.3 - Terminologies](../../graphql/terminologies.md), here we defined query schema by using fragment, so `relay-compiler` will generate each fragment type, we will explain why using fragment in this example.
 
 Run command
 
 ```
-$ yarn run apollo-types
+$ yarn run type
 ```
 
 Look deep into this command
 
 ```
-apollo client:codegen --localSchemaFile=src/schema.graphql --target typescript --queries=src/**/*.ts --outputFlat=src/component/--schema
+relay-compiler --src ./src/component/ --schema ./schema.graphql
 ```
 
-`apollo client:codegen` need `--localSchemaFile` which is we grab from starwars server and target to `typescript`, here you can choose `flow/typescript`.
+`compiler` will grab queries in `--src` and generate type.
 
-`--queries` require our query file, `apollo` command will only parse query string with `graphql-tag`.
+`--schema` is the schema we got from server side.
 
-`--outputFlat` will set the path of output type.
+`relay-compiler` will put the generated type files under `__generated__`, each file not only describe the type but also show the AST.
 
-
-#### Start Apollo
+#### Start Relay
 
 ```
-$ cd starwars-apollo && yarn run start
+$ cd starwars-relay && yarn run start
 ```
 
-Webpack dev server will run on [http://localhost:3001](http://localhost:3001)
+Webpack dev server will run on [http://localhost:3002](http://localhost:3002)
 
 ## Look to the code
 
@@ -100,129 +85,114 @@ Same as previous section.
 
 ### Main component
 
-#### src/index.tsx
-
-In `src/index.tsx`, we import different `Apollo` related library:
-
-- apollo-link-http
+#### src/component/Root.js
 
 ```
-import { createHttpLink } from 'apollo-link-http'
-const graphqlUrl = 'http://localhost:5000/grahpql'
-
-const httpLink = createHttpLink({
-  uri: graphqlUrl,
-})
-```
-`apollo-link-http` create `httpLink` object. 
-
-- apollo-cache-inmemory
-
-```
-import { InMemoryCache } from 'apollo-cache-inmemory'
-const cache = new InMemoryCache();
-```
-`apollo-cache-inmemory` create `cache` object.
-
-- apollo-client
-
-```
-import { ApolloClient } from 'apollo-client'
-const client = new ApolloClient({
-  cache,
-  link: httpLink
+const PersonQuery = searchStyle((props) => {
+  const { classes } = props
+  return (
+    <QueryRenderer
+      environment={modernEnvironment}
+      query={personQuery}
+      variables={{personID: props.personID}}
+      render={({error, props}) => {
+        if (error) {
+          return <Paper className={classes.infoPaper}><div>Error</div></Paper>
+        }
+        if (props && props.person) {
+          return <InfoFragment data={props.person}/>
+        } else {
+          return <Paper className={classes.infoPaper}><div>Loading</div></Paper>
+        }
+      }}
+    />
+  )
 })
 ```
 
-`apollo-client` create `client` object which has params cache and link.
+In `src/component/Root.js`, we import `QueryRenderer` from `react-relay`,
+`QueryRenderer` will fetch the data when component mount time.
 
-- react-apollo
+`QueryRenderer` need setting parameters `environment`, `variables` and `query` schema.
+
+`environment` is set in `src/env.js`.
+
+#### src/env.js
 
 ```
-import { ApolloProvider } from 'react-apollo'
-export default () => (
-  <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>
+import { Environment, Network, RecordSource, Store } from 'relay-runtime'
+import 'whatwg-fetch'
+
+function fetchQuery(operation, variables) {
+  return fetch('http://localhost:5000/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: operation.text,
+      variables,
+    }),
+  }).then(response => {
+    return response.json()
+  })
+}
+
+export const modernEnvironment = new Environment({
+  network: Network.create(fetchQuery),
+  store: new Store(new RecordSource()),
+})
+```
+
+There are serveral way to implementation network layer in `Relay`,
+here we use facebook isomorphic fetch `whatwg-fetch` and create a `Store` object as cache.
+
+`operation.text`, `variables` are query schema and variables we set in `QueryRender`.
+Once component mount, will get the data in props.
+
+Pass data to child component `InfoFragment`.
+
+#### src/component/InfoFragment.js
+
+```
+import React from 'react'
+import Paper from '@material-ui/core/Paper';
+import { createFragmentContainer } from 'react-relay'
+import ShipFragment from './ShipFragment'
+import { Info as InfoQuery } from '../queries/info'
+import { searchStyle } from '../util/style'
+
+const Info = searchStyle((props) => {
+  const { classes, data: person } = props
+
+  return (
+    <Paper className={classes.infoPaper}>
+      <div>{person.name}</div>
+      <ul>
+        {person.starshipConnection && person.starshipConnection.starships
+          ? person.starshipConnection.starships.map((starShip, starShipIndex) => {
+            return <ShipFragment key={`starShip-${starShipIndex}`} data={starShip}/>
+          })
+          : null
+        }
+      </ul>
+    </Paper>
+  )
+})
+
+export default createFragmentContainer(
+  Info,
+  InfoQuery,
 )
 ```
 
-`react-apollo` provide `ApolloProvider`, give a client and wrapper our App.
-This is react context way which we can got the response from child element.
+Started from here is the most different part between Apollo,
+at beginning we import `createFragmentContainer` from `react-relay`,
+constructor needs a `component` for using GraphQL fragment data and `fragmentSpec` is specifies the data requirements for the Component via a GraphQL fragment, the required data will be available on the component as props that match the shape of the provided fragment.
 
-#### src/App.tsx
+For more detail, please check reference [here](https://facebook.github.io/relay/docs/en/fragment-container.html).
 
-```
-import { GetSWPersonByPersonID, GetSWPersonByPersonIDVariables } from './--schema/GetSWPersonByPersonID'
-import { shipInfo } from './--schema/shipInfo'
-import { SWPersonQUERY } from './queries'
-import { Query } from 'react-apollo'
-
-class SWPerson extends Query<GetSWPersonByPersonID, GetSWPersonByPersonIDVariables> {}
-
-const GraphQLPerson = (props: GraphQLPersonProps) => {
-  const { personID } = props
-  return (
-    <SWPerson query={SWPersonQUERY} variables={{personID}}>
-      {({ loading, data, error }) => {
-        if (loading) return renderLoading()
-        if (error) return renderError()
-        if (!data) return renderNoData()
-        const { person } = data
-        return person ? (
-          <div >
-            <div>{person.name}</div>
-            <div>Start ship:</div>
-            <ul>
-              {person.starshipConnection &&
-              person.starshipConnection.starships &&
-              person.starshipConnection.starships.length > 0
-                ? person.starshipConnection.starships
-                    .map((ship: shipInfo, shipIndex: number)  => 
-                    (
-                      <li key={`shipIndex-${shipIndex}`}>
-                        <div>{ship.name}</div>
-                      </li>
-                    ))
-                : renderNoData()
-              }
-            </ul>
-          </div>
-        ) : renderNoData()
-      }}
-    </SWPerson>
-  )
-}
-```
-
-`GetSWPersonByPersonID` and `GetSWPersonByPersonIDVariables` are types from `'./--schema/GetSWPersonByPersonID'`:
-
-```
-export interface GetSWPersonByPersonID {
-  person: GetSWPersonByPersonID_person | null;
-}
-
-export interface GetSWPersonByPersonIDVariables {
-  personID?: string | null;
-}
-```
-
-It define interface of response data format and query variables, which we use for create new class extends `Query` from `react-apollo`.
-
-Check `Query` in `react-apollo`, it extends `React Component` and receive two generic type interface `<TData, TVariables>`, `TDate` we assgin `GetSWPersonByPersonID` and `TVariables` assign to `GetSWPersonByPersonIDVariables`.
-
-In stateless component `GraphQLPerson`, we implement `SWPerson` with two params:
-
-- query set to `SWPersonQUERY`, `SWPersonQUERY` is query schema.
-- variables set to `{personID: personID}`, `personID` is a number from props, and with ES6 object shorthand just write `{personID}`.
-
-This component will do GraphQL fetch when mount.
-Due to `personID` is from props, component will re-fetch & re-render when `personID` value change.
-
-Same as context api, `loading`, `data` and `error` are context values we can use, each status update will re-render the component.
-
-At last, we can get `person` from data and render information.
-
+`InfoQuery` is the fragment spec we provide, 
 
 ### Input Field Component
 
@@ -421,4 +391,5 @@ Second is make sure component really render element, the element value should sa
 - [Apollo client testing](https://www.apollographql.com/docs/react/recipes/testing.html)
 - [react-apollo-client-testing](https://www.robinwieruch.de/react-apollo-client-testing/)
 - [testing-apollos-query-component](https://blog.apollographql.com/testing-apollos-query-component-d575dc642e04)
+- [relay-vs-apollo](https://www.prisma.io/blog/relay-vs-apollo-comparing-graphql-clients-for-react-apps-b40af58c1534)
 

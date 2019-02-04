@@ -1,7 +1,7 @@
 * [1 - Setup](setup/README.md)
 * [2 - GraphQL quick view](graphql/README.md)
   * [2.1 - What is GraphQL?](graphql/what_is_graphql.md)
-  * [2.2 - Why Should we use GraphQL?](why_should_we_use_graphql.md)
+  * [2.2 - Why Should we use GraphQL?](graphql/why_should_we_use_graphql.md)
   * [2.3 - Terminologies](graphql/terminologies.md)
   * [2.4 - Star wars api with GraphQL](graphql/play_with_star_wars.md)
 * [3 - Play Star wars api with different way](play/README.md)

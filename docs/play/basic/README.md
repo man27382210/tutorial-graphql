@@ -1,6 +1,6 @@
 # Basic Usage
 
-For this example, we will use `fetch` to get Star Wars info.
+For this tutorial, we will use `fetch` to get Star Wars info.
 
 ## Overview
 

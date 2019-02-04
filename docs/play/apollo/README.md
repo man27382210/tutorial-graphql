@@ -1,6 +1,6 @@
 # Apollo Client
 
-For this example, we will use `Apollo Client` to get Star Wars info.
+For this tutorial, we will use `Apollo Client` to get Star Wars info.
 
 ## Overview
 
@@ -134,7 +134,7 @@ const client = new ApolloClient({
 })
 ```
 
-`apollo-client` create `client` object which has params cache and link.
+`apollo-client` create `client` object which has parameters for assign cache and link object.
 
 - react-apollo
 
