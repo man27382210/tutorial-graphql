@@ -279,85 +279,157 @@ In the section, we need some step to setup and target what kind of unit test we 
 
 ### Setup
 
-Same as pervious tutorial, we use `jest` and `enzyme` as unit test tool, 
+Same as pervious tutorial, we use `jest` and `enzyme` as unit test tool, also Relay use global fetch in Network layer, we use `jest-fetch-mock` for stub fetch method to return fake data.
+
+#### test/setup.js
 
 ```
-"scripts": {
-    ...
-    "test": "node scripts/test.js --env=jsdom",
+global.fetch = require('jest-fetch-mock')
+```
+#### test/mockFetch.js
+
+```
+export function mockFetch({ status = 200, response }) {
+  global.fetch = jest.fn(async () => ({
+    status,
+    ok: status < 400,
+    json: async () => response
+  }))
+}
 ```
 
-Command set `--env` as `jsdom` and in `scripts/test.js` run `jest` as global variable.
-
-Seems this Application use Apollo Client Query to do GraphQL fetch,
-there are some topic we can test:
-
-- When component mount, Query component really do fetch and render the component.
-- `spyOn` apollo client object and make sure the fetch method really tigger.
-- The `query` which apollo client send is same as what we expect.
-- Component render element from mock response.
-
-Due to above reason, we need to do some setup to make unit test work.
-
-- `test/setup.ts` is setting up `enzyme-adapter-react-16`.
-- `test/client-mock.ts` is making a fake Apollo client by use `makeExecutableSchema`, define fake `sechma` and `resolvers` instead of request real GraphQL server.
+Seems this Application use react-relay `QueryRenderer` to do GraphQL fetch,
+we want to test component render element from mock response.
 
 
 ### Testing
 
+#### Test QueryRenderer component
+
 ```
-import * as React from 'react'
-import { ApolloProvider } from 'react-apollo'
-import { mount } from 'enzyme'
-
+// src/component/Root.test.js
+import React from 'react'
 import '../../test/setup'
+import { mount } from 'enzyme'
+import { modernEnvironment } from '../env'
+import { PersonQuery } from './Root'
+import { mockFetch } from '../../test/mockFetch'
 
-import clientMock from '../../test/client-mock'
+describe('PersonQuery', () => {
+  const mockPerson = {
+    person: {
+      id: 'cGVvcGxlOjE=',
+      name: 'Luke Skywalker',
+      filmConnection: {
+        films: [
+          {
+            title: 'A New Hope',
+            episodeID: 4
+          }
+        ]
+      },
+      starshipConnection:{
+        starships:[
+          {  
+            name: "X-wing",
+            starshipClass: "Starfighter"
+          }
+        ],
+        totalCount: 1
+      }
+    }
+  }
 
-import { GraphQLPerson } from './App'
-import { SWPersonQUERY } from './queries'
+  describe('Root app', () => {
+    it('should render content when given a successful response', async () => {
+      mockFetch({response: { data: mockPerson }})
+      const wrapper = mount(<PersonQuery personID={'1'} />)
+      return Promise.resolve(wrapper)
+        .then((comp) => {
+          return comp.update()
+        })
+        .then(() => {
+          expect(wrapper.text()).toContain("Luke Skywalker")
+        })
+    })
 
-describe('GraphQLPerson', () => {
-  it('calls the query method on Apollo Client', () => {
-    const clientMockSpy = jest.spyOn(clientMock, 'watchQuery');
-
-    mount(
-      <ApolloProvider client={clientMock}>
-        <GraphQLPerson personID={'1'} />
-      </ApolloProvider>,
-    )
-
-    expect(clientMockSpy).toHaveBeenCalled()
-    expect(clientMockSpy.mock.calls[0][0].query).toEqual(SWPersonQUERY)
-    clientMockSpy.mockRestore()
-  })
-
-  it('Render component', () => {
-    const wrapper = mount(
-      <ApolloProvider client={clientMock}>
-        <GraphQLPerson personID={'1'} />
-      </ApolloProvider>,
-    )
-    expect(wrapper.find('div').at(1).text()).toEqual('Luke Skywalker')
+    it('should render error when given a fail response', async () => {
+      mockFetch({status: 500})
+      modernEnvironment.getStore().getSource().clear()
+      const wrapper = mount(<PersonQuery personID={'1'} />)
+      return Promise.resolve(wrapper)
+        .then((comp) => {
+          return comp.update()
+        })
+        .then(() => {
+          expect(wrapper.text()).toContain("Error")
+        })
+    })
   })
 })
 ```
 
-Import `'../../test/setup'` for setting `Jest` as global variable, `Jest` provide `BDD`/`TDD` method so we don't need to include other library.
+`mockFetch` will helping us mock the response and check the element/text exist or not,
+the different is `QueryRenderer` make a `async` request, we need to wait the component get the mock data and then run the test.
+Here using a `Promise.resolve` and `update()` to get the final render status of component.
 
-`clientMock` is the mock client for `ApolloProvider`, which `Query` will go through this mock client.
+Seems we setting cache in react-relay, we need to clear the cache to do the next test, otherwise even we mock a bad request, the `QueryRenderer` will use cache in the component because query schema is the same one.
 
-First test is to check component really call the query method and the query is what we expected when component mount.
-`spyOn` will monitoring the `clientMock` method, all query will go with `watchQuery` method in `clientMock`(Jump into `ApolloClient.d.ts`, there are all method type definition. `watchQuery` not just use in one query but also query and mutation, for more detail please check here [watchQuery vs query](https://github.com/Akryum/vue-apollo/issues/1)).
+`modernEnvironment.getStore().getSource().clear()` will clear the cache.
 
-`expect` the spy object has been call once.
-Also this object provide a mock instance for access to the mock's metadata, grab the query we send and compare the is it same as the query `SWPersonQUERY` we setting in component.
+#### Fragment component test
 
-Second is make sure component really render element, the element value should same as our mock data.
+```
+// src/component/InfoFragment.test.js
+jest.mock('react-relay', () => ({createFragmentContainer: component => component}))
+import React from 'react'
+import '../../test/setup'
+import { mount } from 'enzyme'
+import InfoFragment from './InfoFragment'
+
+describe('Info', () => {
+  const mockPerson = {
+    person: {
+      id: 'cGVvcGxlOjE=',
+      name: 'Luke Skywalker',
+      filmConnection: {
+        films: [
+          {
+            title: 'A New Hope',
+            episodeID: 4
+          }
+        ]
+      },
+      starshipConnection:{
+        starships:[
+          {  
+            name: "X-wing",
+            starshipClass: "Starfighter"
+          }
+        ],
+        totalCount: 1
+      }
+    }
+  }
+
+  describe('Info Fragment', () => {
+    it('should render content when have data pass', async () => {
+      const wrapper = mount(<InfoFragment classes={{}} data={mockPerson.person} />)
+      expect(wrapper.text()).toContain("Luke Skywalker")
+    })
+    it('should render Error when given empty data', async () => {
+      const wrapper = mount(<InfoFragment classes={{}} data={{}} />)
+      expect(wrapper.text()).toContain("Error")
+    })
+  })
+})
+```
+
+In this testing, most important thing is mock the `react-relay` and it's `createFragmentContainer` function, it will make Info component become a pure function component and no need to check the schema.
+
 
 ## Reference
-- [Apollo client testing](https://www.apollographql.com/docs/react/recipes/testing.html)
-- [react-apollo-client-testing](https://www.robinwieruch.de/react-apollo-client-testing/)
-- [testing-apollos-query-component](https://blog.apollographql.com/testing-apollos-query-component-d575dc642e04)
-- [relay-vs-apollo](https://www.prisma.io/blog/relay-vs-apollo-comparing-graphql-clients-for-react-apps-b40af58c1534)
+- [Relay official Document](http://facebook.github.io/relay/docs/en/introduction-to-relay.html)
+- [relay-modern-flow-jest-example](https://github.com/zth/relay-modern-flow-jest-example)
+
 
