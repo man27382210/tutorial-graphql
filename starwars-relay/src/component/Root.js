@@ -7,7 +7,7 @@ import { personQuery } from '../queries/GetSWPersonByPersonID'
 import InfoFragment from './InfoFragment'
 import { searchStyle } from '../util/style'
 
-const PersonQuery = searchStyle((props) => {
+export const PersonQuery = searchStyle((props) => {
   const { classes } = props
   return (
     <QueryRenderer

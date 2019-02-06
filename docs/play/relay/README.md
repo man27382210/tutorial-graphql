@@ -186,122 +186,91 @@ export default createFragmentContainer(
 )
 ```
 
-Started from here is the most different part between Apollo,
-at beginning we import `createFragmentContainer` from `react-relay`,
-constructor needs a `component` for using GraphQL fragment data and `fragmentSpec` is specifies the data requirements for the Component via a GraphQL fragment, the required data will be available on the component as props that match the shape of the provided fragment.
+Start from here is the most different part between Apollo,
+at beginning we import `createFragmentContainer` from `react-relay`.
+
+Constructor of `createFragmentContainer` needs a `component` for using GraphQL fragment data and `fragmentSpec` is specifies the data requirements for the Component via a GraphQL fragment, the required data will be available on the component as props that match the shape of the provided fragment.
+
+`createFragmentContainer` not directly fetch the data, but will make sure data exist or not before render.
 
 For more detail, please check reference [here](https://facebook.github.io/relay/docs/en/fragment-container.html).
 
-`InfoQuery` is the fragment spec we provide, 
+`Info` is the stateless component above,
+`InfoQuery` is the fragment spec.
+
+#### src/queries/info.js
+
+```
+import { graphql } from 'react-relay';
+
+export const Info = graphql`
+  fragment infoFragment on Person {
+    id
+    name
+    filmConnection {
+      films {
+        title
+        episodeID
+      }
+    }
+    starshipConnection {
+      starships {
+        ...shipInfoFragment
+      }
+      totalCount
+    }
+  }
+`
+```
+
+if we print out the data (here rename to person by ES6 Syntactic sugar) in component and compare the network console, we can see what's different between Relay and Apollo.
+
+In network console, all data has been fetch as image:
+
+<img src="../../gitbook/images/relay_network.png" width="500" />
+
+But in `Info` component, you can only get data specifies in fragment spec, like `shipInfoFragment` is an empty object, this is because Relay masking data inside `shipInfoFragment` due to itx describe in other fragment spec.
+
+<img src="../../gitbook/images/relay_info.png" width="500" />
+
+Pass `starShip` to `ShipFragment`.
+
+#### src/component/ShipFragment.js
+
+```
+import React from 'react'
+import { createFragmentContainer } from 'react-relay'
+import { ShipInfo as ShipInfoQuery } from '../queries/shipInfo'
+
+const ShipInfo = (props) => {
+  const shipInfo = props.data
+  return <li>{shipInfo.name}</li>
+}
+
+export default createFragmentContainer(
+  ShipInfo,
+  ShipInfoQuery,
+)
+```
+
+Same as `Info` component, `ShipInfo` is stateless component and `ShipInfoQuery` is specify spec.
 
 ### Input Field Component
 
-We use the other component which have input field, submit button and also register `PersonContext`.
+Same as previous tutorial, click button and change the props to re-fetch new data.
 
-```
-class extends React.Component<Props, State> {
-    state = {
-      personID: '',
-      loading: true,
-    }
-    personIDInput = React.createRef<HTMLInputElement>()
+### Summary
 
-    submitPerson = () => {
-      if (this.personIDInput.current) {
-        this.setState({personID: this.personIDInput.current.value, loading: false})
-      }
-    }
+Relay core thinking is *declarative component*, which means each component describe what kind of data it needs and show on UI.
 
-    render() {
-      const { classes } = this.props
-      const { loading, personID } = this.state
-      return (
-        <Grid container spacing={24}>
-          <Grid container item xs={12}>
-            <Paper>
-              apollo POST
-            </Paper>
-          </Grid>
-          <Grid container item xs={6} spacing={16}>
-            <Grid item xs={6}>
-              <Paper className={classes.infoPaper}>
-                <input ref={this.personIDInput} defaultValue='1'/>
-                <button onClick={this.submitPerson}> GET Person </button>
-              </Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <Paper className={classes.infoPaper}>
-                {!loading && personID.length > 0
-                   ? <GraphQLPerson {...{classes, personID}}/>
-                   : renderLoading()
-                }
-              </Paper>
-            </Grid>
-          </Grid>
-        </Grid>
-      )
-    }
-  }
-```
+Relay decrease component coupling via only can access the data specify in spec, even child component.
 
-This component include `GraphQLPerson` component and it's own state.
-
-```
-submitPerson = () => {
-  if (this.personIDInput.current) {
-    this.setState({personID: this.personIDInput.current.value, loading: false})
-  }
-}
-```
-
-Once click the button,
-`personID` and `loading` in state will change and render `GraphQLPerson` component with new `personID` value.
-
-### GraphQL Schema
-
-In `scr/SWPerson`:
-
-```
-export const SWPersonQUERY = gql`
-  query GetSWPersonByPersonID($personID: ID){
-    person(personID: $personID) {
-      ...
-    }
-  }
-  ...
-  `
-```
-
-Almost same as previous pratice,
-`SWPerson` component will helping us match `query` and `variables` and handle all fetch status in context.
-
-### Type Check
-
-With Typescript and interface of variables,
-let's make an example if variables is not the type we need.
-
-```
-const { personID } = props
-  const id: number = parseInt(personID, 10)
-  return (
-    <SWPerson query={SWPersonQUERY} variables={{personID: id}}>
-    ...
-```
-
-Create a `nubmer` const and assgin to `personID`,
-TSLint will jump out type error:
-
-```
-[ts]
-Type '{ personID: number; }' is not assignable to type 'GetSWPersonByPersonIDVariables'.
-  Types of property 'personID' are incompatible.
-    Type 'number' is not assignable to type 'string | null | undefined'. [2322]
-```
+For more detail, please check [document](https://facebook.github.io/relay/docs/en/thinking-in-relay.html).
 
 ## Pratice
 
 Like previous pratice,
-please try to fetch more information by update the schema,
+please try to fetch more information by update schema and create more fragment,
 don't forget re-generate the type.
 
 ## Unit test
@@ -310,8 +279,7 @@ In the section, we need some step to setup and target what kind of unit test we 
 
 ### Setup
 
-Here we use `jest` and `enzyme`, it's very popular unit test tool in JS / React world.
-This project is create from `create-react-app`, which has test script setup in `package.json`: 
+Same as pervious tutorial, we use `jest` and `enzyme` as unit test tool, 
 
 ```
 "scripts": {

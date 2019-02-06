@@ -7,7 +7,7 @@ import { searchStyle } from '../util/style'
 
 const Info = searchStyle((props) => {
   const { classes, data: person } = props
-
+  if(!person || Object.keys(person).length === 0) return <>Error</>
   return (
     <Paper className={classes.infoPaper}>
       <div>{person.name}</div>

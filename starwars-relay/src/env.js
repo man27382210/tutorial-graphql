@@ -1,8 +1,10 @@
 import { Environment, Network, RecordSource, Store } from 'relay-runtime'
 import 'whatwg-fetch'
 
+const GRAPHQL_SERVER = 'http://localhost:5000/'
+
 function fetchQuery(operation, variables) {
-  return fetch('http://localhost:5000/', {
+  return fetch(GRAPHQL_SERVER, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
