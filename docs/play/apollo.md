@@ -7,7 +7,7 @@ For this tutorial, we will use `Apollo Client` to get Star Wars info.
 1. [Introduction of Apollo](#Introduction)
 2. [Preparation](#preparation)
 3. [Look to the code](#start-development)
-4. [Pratice](#pratice)
+4. [Practice](#practice)
 5. [Unit Test](#unit-test)
 
 ## Introduction
@@ -302,7 +302,7 @@ export const SWPersonQUERY = gql`
   `
 ```
 
-Almost same as previous pratice,
+Almost same as previous practice,
 `SWPerson` component will helping us match `query` and `variables` and handle all fetch status in context.
 
 ### Type Check
@@ -328,9 +328,9 @@ Type '{ personID: number; }' is not assignable to type 'GetSWPersonByPersonIDVar
     Type 'number' is not assignable to type 'string | null | undefined'. [2322]
 ```
 
-## Pratice
+## Practice
 
-Like previous pratice,
+Like previous practice,
 please try to fetch more information by update the schema,
 don't forget re-generate the type.
 
@@ -418,6 +418,7 @@ Also this object provide a mock instance for access to the mock's metadata, grab
 Second is make sure component really render element, the element value should same as our mock data.
 
 ## Reference
+- [Apollo Client](https://github.com/apollographql/apollo-client)
 - [Apollo client testing](https://www.apollographql.com/docs/react/recipes/testing.html)
 - [react-apollo-client-testing](https://www.robinwieruch.de/react-apollo-client-testing/)
 - [testing-apollos-query-component](https://blog.apollographql.com/testing-apollos-query-component-d575dc642e04)

@@ -7,19 +7,19 @@ For this tutorial, we will use `Relay (modern)` to get Star Wars info.
 1. [Introduction of Relay](#Introduction)
 2. [Preparation](#preparation)
 3. [Look to the code](#start-development)
-4. [Pratice](#pratice)
+4. [Practice](#practice)
 5. [Unit Test](#unit-test)
 
 ## Introduction
 
 Relay is a framework build by Facebook.
-In the introduction, Relay is data-driven React component, not like Apollo support different platform, Relay focus on React and it's head of GraphQL development, most of new feature will implement on Relay at first.
+In the introduction, Relay is data-driven React component, not like Apollo support different platform, Relay focus on React and it's head of GraphQL development, most of new feature on Relay will close to Facebook usage.
 
 Relay also allow component specify what kind of data it need only provide the data, which we can see more example in this tutorial.
 
 ## Preparation
 
-Before started, Relay need strong type support, not like Apollo is a option, Relay is more strictly and so far only support `Flow`.
+Before started, Relay need strong type support during build time, not like Apollo is a option, Relay is more strictly and so far only support `Flow`.
 
 Same as previous tutorial, we need to download schema from server.
 
@@ -29,7 +29,7 @@ Same as previous tutorial, we need to download schema from server.
 $ cd swapi-graphql && yarn run start
 ```
 
-#### Get the sechma from server
+#### Get the schema from server
 
 Now we can get the sechma, `get-graphql-schema` support GraphQL type or JSON type, In this example we use graphql type.
 
@@ -267,9 +267,9 @@ Relay decrease component coupling via only can access the data specify in spec, 
 
 For more detail, please check [document](https://facebook.github.io/relay/docs/en/thinking-in-relay.html).
 
-## Pratice
+## Practice
 
-Like previous pratice,
+Like previous practice,
 please try to fetch more information by update schema and create more fragment,
 don't forget re-generate the type.
 

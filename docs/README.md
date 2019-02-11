@@ -16,10 +16,12 @@ With this training, you will learn about basic GraphQL Client side implementatio
 	* GraphQL Basic usage
 	* Apollo
 	* Relay
-	* Unit test
+	* Compare
 * Advanced
   * Mutation
   * Pagination
-  * Streaming
+  * Subscriptions and Live
+  * Authentication
+  * Hook
 
 ## [SUMMARY](SUMMARY.md)

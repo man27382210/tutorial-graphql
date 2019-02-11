@@ -6,7 +6,7 @@ For this tutorial, we will use `fetch` to get Star Wars info.
 
 1. [Preparation](#preparation)
 2. [Look to the code](#look-to-the-code)
-3. [Pratice](#pratice)
+3. [Practice](#practice)
 4. [Overall](#overall)
 
 ## Preparation
@@ -291,7 +291,7 @@ so will go to error case.
 })
 ```
 
-## Pratice
+## Practice
 
 Please try to fetch more information by update the schema,
 also you can try to get other root field such film...etc.
@@ -308,4 +308,4 @@ But still, we have some problem need to deal with:
 
 Due to those reason, GraphQL community jump out two library --> [Apollo](https://www.apollographql.com/) / [Relay](https://facebook.github.io/relay/).
 
-Next step will introduce Apollo Client and this community's echosystem.
+Next step will introduce Apollo Client and this community's ecosystem.
