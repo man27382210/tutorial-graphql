@@ -4,18 +4,37 @@ type Message {
   author: String
 }
 
+type MessageConnection {
+  pageInfo: PageInfo
+  edges: [MessageEdge]
+}
+
+type MessageEdge {
+  node: Message
+  cursor: String
+}
+
 input MessageInput {
   content: String
   author: String
 }
 
+type MessagePayload {
+  messageEdge: MessageEdge
+}
+
 type Mutation {
-  createMessage(input: MessageInput): Message
-  updateMessage(id: ID!, input: MessageInput): Message
+  createMessage(input: MessageInput): MessagePayload
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
 }
 
 type Query {
-  getMessage(id: ID!): Message
-  getMessages: [Message]
+  getMessage(first: Int): MessageConnection
 }
 

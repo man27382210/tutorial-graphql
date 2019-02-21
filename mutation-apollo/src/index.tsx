@@ -1,5 +1,5 @@
 import * as React from 'react'
 import { render } from 'react-dom'
-import PersonApolloApp from './component/index'
+import MessageApp from './component/index'
 
-render(<PersonApolloApp />, document.getElementById('basic'))
+render(<MessageApp />, document.getElementById('basic'))

@@ -33,7 +33,6 @@ export const AllMessageQuery = searchStyle((props) => {
         if (error) {
           return <Paper className={classes.infoPaper}><div>Error</div></Paper>
         }
-        console.log(props)
         if (props && props.getMessage) {
           return <Paper className={classes.infoPaper}><Messages edges={props.getMessage.edges}/></Paper>
         } else {

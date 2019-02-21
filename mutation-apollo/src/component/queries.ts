@@ -1,30 +1,16 @@
 import gql from 'graphql-tag'
 
-export const SWPersonQUERY = gql`
-  query GetSWPersonByPersonID($personID: ID){
-    person(personID: $personID) {
-      ...info
-    }
-  }
-  fragment info on Person {
-    id
-    name
-    filmConnection {
-      films {
-        title
-        episodeID
+export const messageQUERY = gql`
+  query GetMessage {
+    getMessage {
+      edges {
+        node {
+          id
+          content
+          author
+        }
       }
     }
-    starshipConnection {
-      starships {
-        ...shipInfo
-      }
-      totalCount
-    }
-  }
-  fragment shipInfo on Starship {
-      name
-      starshipClass
   }
 `
 
