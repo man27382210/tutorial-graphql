@@ -1,8 +1,20 @@
 var express = require('express');
 var express_graphql = require('express-graphql');
 var { buildSchema } = require('graphql');
+var cors = require('cors')
 
 var schema = buildSchema(`
+  type MessagePayload {
+    messageEdge: MessageEdge
+  }
+
+  type PageInfo {
+    startCursor: String
+    endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+  }
+
   input MessageInput {
     content: String
     author: String
@@ -14,14 +26,22 @@ var schema = buildSchema(`
     author: String
   }
 
+  type MessageConnection {
+    pageInfo: PageInfo
+    edges: [MessageEdge]
+  }
+
+  type MessageEdge {
+    node: Message
+    cursor: String
+  }
+
   type Query {
-    getMessage(id: ID!): Message
-    getMessages: [Message]
+    getMessage(first: Int): MessageConnection
   }
 
   type Mutation {
-    createMessage(input: MessageInput): Message
-    updateMessage(id: ID!, input: MessageInput): Message
+    createMessage(input: MessageInput): MessagePayload
   }
 `);
 
@@ -34,49 +54,40 @@ class Message {
   }
 }
 
+function createId() {
+  return require('crypto').randomBytes(10).toString('hex');
+}
+
 // Maps username to content
-var fakeDatabase = {};
-
-var root = {
-  getMessage: function ({id}) {
-    if (!fakeDatabase[id]) {
-      throw new Error('no message exists with id ' + id);
-    }
-    return new Message(id, fakeDatabase[id]);
-  },
-  createMessage: function ({input}) {
-    // Create a random id for our "database".
-    var id = require('crypto').randomBytes(10).toString('hex');
-
-    fakeDatabase[id] = input;
-    return new Message(id, input);
-  },
-  updateMessage: function ({id, input}) {
-    if (!fakeDatabase[id]) {
-      throw new Error('no message exists with id ' + id);
-    }
-    // This replaces all old data, but some apps might want partial update.
-    fakeDatabase[id] = input;
-    return new Message(id, input);
-  },
-  getMessages: function () {
-    if (Object.keys(fakeDatabase).length == 0) {
-      throw new Error('no message exists with id ' + id);
-      return [];
-    }
-    const messages = Object.keys(fakeDatabase).map((id) => {
-      return new Message(id, fakeDatabase[id]);
-    });
-    return messages;
+var fakeDatabase = {
+  [createId()]: {
+    content: 'init content',
+    author: 'Davis'
   }
 };
 
+var root = {
+  getMessage: function ({first}) {
+    if (Object.keys(fakeDatabase).length == 0) throw new Error('no message exists with id ');
+    return { edges: Object.keys(fakeDatabase).map((id) => ({ node: new Message(id, fakeDatabase[id]) })) }
+  },
+  createMessage: function ({input}) {
+    // Create a random id for our "database".
+    var id = createId();
+
+    fakeDatabase[id] = input;
+    return {messageEdge: {node: new Message(id, input)}}
+  },
+};
+
 var app = express();
+app.use(cors())
 app.use('/graphql', express_graphql({
   schema: schema,
   rootValue: root,
   graphiql: true,
 }));
+
 app.listen(4000, () => {
   console.log('Running a GraphQL API server at localhost:4000/graphql');
 });

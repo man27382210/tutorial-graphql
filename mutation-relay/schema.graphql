@@ -1,0 +1,40 @@
+type Message {
+  id: ID!
+  content: String
+  author: String
+}
+
+type MessageConnection {
+  pageInfo: PageInfo
+  edges: [MessageEdge]
+}
+
+type MessageEdge {
+  node: Message
+  cursor: String
+}
+
+input MessageInput {
+  content: String
+  author: String
+}
+
+type MessagePayload {
+  messageEdge: MessageEdge
+}
+
+type Mutation {
+  createMessage(input: MessageInput): MessagePayload
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+type Query {
+  getMessage(first: Int): MessageConnection
+}
+
