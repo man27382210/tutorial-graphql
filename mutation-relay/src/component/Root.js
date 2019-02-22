@@ -22,7 +22,7 @@ const Messages = props => {
   )
 }
 
-export const AllMessageQuery = searchStyle((props) => {
+const AllMessageQuery = searchStyle((props) => {
   const { classes } = props
   return (
     <QueryRenderer

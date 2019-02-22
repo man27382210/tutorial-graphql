@@ -20,11 +20,11 @@ export class CreateMessage extends Component {
             placeholder='Content'
           />
         </div>
-        <div
+        <button
           onClick={() => this._createMessage()}
         >
           submit
-        </div>
+        </button>
       </div>
     )
   }

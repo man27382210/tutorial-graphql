@@ -913,7 +913,7 @@ abbrev@1:
   version "1.1.1"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
 
-accepts@^1.3.0, accepts@~1.3.4, accepts@~1.3.5:
+accepts@~1.3.4, accepts@~1.3.5:
   version "1.3.5"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/accepts/-/accepts-1.3.5.tgz#eb777df6011723a3b14e8a72c0805c8e86746bd2"
   dependencies:
@@ -2090,7 +2090,7 @@ content-disposition@0.5.2:
   version "0.5.2"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/content-disposition/-/content-disposition-0.5.2.tgz#0cf68bb9ddf5f2be7961c3a85178cb85dba78cb4"
 
-content-type@^1.0.4, content-type@~1.0.4:
+content-type@~1.0.4:
   version "1.0.4"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/content-type/-/content-type-1.0.4.tgz#e138cc75e040c727b1966fe5e5f8c9aee256fe3b"
 
@@ -2804,15 +2804,6 @@ expect@^24.0.0:
     jest-message-util "^24.0.0"
     jest-regex-util "^24.0.0"
 
-express-graphql@^0.6.12:
-  version "0.6.12"
-  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/express-graphql/-/express-graphql-0.6.12.tgz#dfcb2058ca72ed5190b140830ad8cdbf76a9128a"
-  dependencies:
-    accepts "^1.3.0"
-    content-type "^1.0.4"
-    http-errors "^1.3.0"
-    raw-body "^2.3.2"
-
 express@^4.16.2, express@^4.16.3:
   version "4.16.4"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/express/-/express-4.16.4.tgz#fddef61926109e24c515ea97fd2f1bdbf62df12e"
@@ -3380,16 +3371,6 @@ http-errors@1.6.3, http-errors@~1.6.2, http-errors@~1.6.3:
     inherits "2.0.3"
     setprototypeof "1.1.0"
     statuses ">= 1.4.0 < 2"
-
-http-errors@^1.3.0:
-  version "1.7.1"
-  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/http-errors/-/http-errors-1.7.1.tgz#6a4ffe5d35188e1c39f872534690585852e1f027"
-  dependencies:
-    depd "~1.1.2"
-    inherits "2.0.3"
-    setprototypeof "1.1.0"
-    statuses ">= 1.5.0 < 2"
-    toidentifier "1.0.0"
 
 http-parser-js@>=0.4.0:
   version "0.5.0"
@@ -5438,7 +5419,7 @@ range-parser@^1.0.3, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
 
-raw-body@2.3.3, raw-body@^2.3.2:
+raw-body@2.3.3:
   version "2.3.3"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/raw-body/-/raw-body-2.3.3.tgz#1b324ece6b5706e153855bc1148c65bb7f6ea0c3"
   dependencies:
@@ -6155,7 +6136,7 @@ static-extend@^0.1.1:
     define-property "^0.2.5"
     object-copy "^0.1.0"
 
-"statuses@>= 1.4.0 < 2", "statuses@>= 1.5.0 < 2":
+"statuses@>= 1.4.0 < 2":
   version "1.5.0"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
 
@@ -6403,10 +6384,6 @@ todomvc-app-css@^2.1.2:
 todomvc-common@^1.0.3:
   version "1.0.5"
   resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/todomvc-common/-/todomvc-common-1.0.5.tgz#8c3e799ac9f1fc1573e0c204f984510826914730"
-
-toidentifier@1.0.0:
-  version "1.0.0"
-  resolved "https://rwasp-nexus.prod.jp.local/repository/npm-mall-group/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
 
 tough-cookie@>=2.3.3:
   version "3.0.1"

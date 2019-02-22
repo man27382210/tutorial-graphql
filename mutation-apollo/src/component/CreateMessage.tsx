@@ -17,13 +17,17 @@ type Message = "Message"
 
 const updateFucntion = (cache: DataProxy, mutationResult: { data: CreateMessageMutation }) => {
   const { createMessage } = mutationResult.data
-  const queryData = cache.readQuery({ query: messageQUERY }) as GetMessage
-  if (!queryData || !queryData.getMessage || !queryData.getMessage.edges || !createMessage) return
-  queryData.getMessage.edges.push(createMessage.messageEdge)
-  cache.writeQuery({
-    query: messageQUERY,
-    data: { getMessage: queryData.getMessage },
-  })
+  try {
+    const queryData = cache.readQuery({ query: messageQUERY }) as GetMessage
+    if (!queryData || !queryData.getMessage || !queryData.getMessage.edges || !createMessage) return
+    queryData.getMessage.edges.push(createMessage.messageEdge)
+    cache.writeQuery({
+      query: messageQUERY,
+      data: { getMessage: queryData.getMessage },
+    })
+  } catch (e) {
+    console.log('cache no update')
+  }
 }
 
 export class CreateMessage extends React.Component {
@@ -50,11 +54,11 @@ export class CreateMessage extends React.Component {
                 placeholder='Content'
               />
             </div>
-            <div
+            <button
               onClick={() => this.createMessage(createMessage)}
             >
               submit
-            </div>
+            </button>
           </>
         )
       }}
