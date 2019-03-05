@@ -6,7 +6,7 @@ With this training, you will learn about basic GraphQL Client side implementatio
 
 ## Who is this training for?
 
-* You need to have a good grasp of Javascript, ES6, and React
+* You need to have a good grasp of Javascript, ES6, Typescript, and React
 
 ## What you will learn
 
@@ -21,7 +21,6 @@ With this training, you will learn about basic GraphQL Client side implementatio
   * Mutation
   * Pagination
   * Subscriptions and Live
-  * Authentication
-  * Hook
+  * New things
 
 ## [SUMMARY](SUMMARY.md)

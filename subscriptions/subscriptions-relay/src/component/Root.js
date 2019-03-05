@@ -34,7 +34,6 @@ class AllMessageQuery extends React.Component {
         query={getMessagesQuery}
         variables={{}}
         render={({error, props}) => {
-          console.log(props)
           if (error) {
             return <Paper className={classes.infoPaper}><div>Error</div></Paper>
           }

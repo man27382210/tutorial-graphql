@@ -12,6 +12,5 @@
 * [4 - Advanced](advanced/README.md)
   * [4.1 - Mutation](advanced/mutation.md)
   * [4.2 - Pagination](advanced/pagination.md)
-  * [4.4 - Subscriptions and Live](advanced/subscriptions_live.md)
-  * [4.3 - Authentication](advanced/authentication.md)
-  * [4.5 - Hook](advanced/hook.md)
+  * [4.3 - Subscriptions and Live](advanced/subscriptions_live.md)
+  * [4.4 - New things](advanced/new_things.md)

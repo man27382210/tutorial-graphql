@@ -27,5 +27,3 @@ export const SWPersonQUERY = gql`
       starshipClass
   }
 `
-
-
