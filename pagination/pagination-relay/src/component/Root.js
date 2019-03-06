@@ -3,24 +3,9 @@ import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import { QueryRenderer } from 'react-relay'
 import { modernEnvironment } from '../env'
-import { getMessagesQuery } from '../query/getMessages'
-import { CreateMessage } from './CreateMessage'
+import { getMessagesQuery } from '../pagination/getMessages'
+import { MessagePaginationContainer } from './pagination'
 import { searchStyle } from '../util/style'
-
-const Messages = props => {
-  const { edges: messages } = props
-  return (
-    <ul>
-      {messages.map((msg, index) => (
-        <li key={`message-${index}`}>
-          <div>{msg.node.id}</div>
-          <div>{msg.node.author}</div>
-          <div>{msg.node.content}</div>
-        </li>
-      ))}
-    </ul>
-  )
-}
 
 const AllMessageQuery = searchStyle((props) => {
   const { classes } = props
@@ -28,13 +13,16 @@ const AllMessageQuery = searchStyle((props) => {
     <QueryRenderer
       environment={modernEnvironment}
       query={getMessagesQuery}
-      variables={{}}
+      variables={{first: 2}}
       render={({error, props}) => {
         if (error) {
           return <Paper className={classes.infoPaper}><div>Error</div></Paper>
         }
-        if (props && props.getMessage) {
-          return <Paper className={classes.infoPaper}><Messages edges={props.getMessage.edges}/></Paper>
+        if (props) {
+          return (
+          <Paper className={classes.infoPaper}>
+            <MessagePaginationContainer data={props} />
+          </Paper>)
         } else {
           return <Paper className={classes.infoPaper}><div>Loading</div></Paper>
         }
@@ -48,9 +36,6 @@ const MessageApp = props => {
     return (
       <Grid container spacing={24}>
         <Grid container item xs={6} spacing={16}>
-          <Grid item xs={6}>
-            <CreateMessage />
-          </Grid>
           <Grid item xs={6}>
             <AllMessageQuery classes={classes} />
           </Grid>

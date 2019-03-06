@@ -7,6 +7,7 @@ type Message {
 type MessageConnection {
   pageInfo: PageInfo
   edges: [MessageEdge]
+  totalCount: Int
 }
 
 type MessageEdge {
@@ -36,5 +37,6 @@ type PageInfo {
 
 type Query {
   getMessage(first: Int): MessageConnection
+  getMessageByPage(first: Int, after: String, last: Int, before: String): MessageConnection
 }
 

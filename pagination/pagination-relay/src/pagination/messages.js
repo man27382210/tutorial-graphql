@@ -1,8 +1,11 @@
 import { graphql } from 'react-relay'
 
-export const getMessagesQuery =  graphql`
-  query getMessagesQuery($first: Int, $after: String, $last: Int, $before: String) {
-    getMessageByPage(first: $first, $after, $last, $before) @connection(key: "messages_getMessage") {
+export const messages =  graphql`
+  fragment messagesFragment on Query {
+    getMessageByPage(
+      first: $first,
+      after: $after,
+    ) @connection(key: "messages_getMessageByPage") {
       pageInfo {
         hasNextPage
         hasPreviousPage
