@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "start": "babel-node ./server.js",
-    "get-schema-graphql": "node_modules/.bin/get-graphql-schema http://localhost:8000/graphql > ./schema.graphql",
+    "get-schema-graphql": "node_modules/.bin/get-graphql-schema http://localhost:3000/graphql > ./schema.graphql",
     "test": "jest",
     "type": "relay-compiler --src ./src/ --schema ./schema.graphql",
     "prettier": "find . \\( -name node_modules -o -name __generated__ \\) -prune -or \\( -name '*.js' -o -name '*.css' -o -name '*.json' -o -name '*.md' \\) -print | xargs prettier --write"

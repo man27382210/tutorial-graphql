@@ -5,11 +5,6 @@
 // START Enums and Input Objects
 //==============================================================
 
-export interface MessageInput {
-  content?: string | null;
-  author?: string | null;
-}
-
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

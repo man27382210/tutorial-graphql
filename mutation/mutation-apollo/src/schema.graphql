@@ -1,3 +1,10 @@
+directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
+
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+
 type Message {
   id: ID!
   content: String
@@ -7,6 +14,7 @@ type Message {
 type MessageConnection {
   pageInfo: PageInfo
   edges: [MessageEdge]
+  totalCount: Int
 }
 
 type MessageEdge {
@@ -36,5 +44,13 @@ type PageInfo {
 
 type Query {
   getMessage(first: Int): MessageConnection
+  getMessageByPage(first: Int, after: String, last: Int, before: String): MessageConnection
 }
+
+type Subscription {
+  messageCreated: MessagePayload
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
