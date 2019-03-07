@@ -2,9 +2,9 @@
 yarn install &&
 cd graphQL-server && yarn install && cd .. &&
 cd query &&
-cd starwars-normal && yarn install && cd .. &&
-cd starwars-apollo && yarn install && cd .. && 
-cd starwars-relay && yarn install && cd .. &&
+cd query-normal && yarn install && cd .. &&
+cd query-apollo && yarn install && cd .. && 
+cd query-relay && yarn install && cd .. &&
 cd .. && cd mutation &&
 cd mutation-apollo && yarn install && cd .. && 
 cd mutation-relay && yarn install && cd .. &&

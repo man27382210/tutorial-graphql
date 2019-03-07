@@ -1,0 +1,16 @@
+{
+  "apps": [
+    {
+      "name": "mutation-apollo",
+      "cwd": "./mutation/mutation-apollo",
+      "script": "npm",
+      "args": "start"
+    },
+    {
+      "name": "mutation-relay",
+      "cwd": "./mutation/mutation-relay",
+      "script": "npm",
+      "args": "start"
+    }
+  ]
+}

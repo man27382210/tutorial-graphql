@@ -1,6 +1,6 @@
 # Basic Usage
 
-For this tutorial, we will use `fetch` to get Star Wars info.
+For this tutorial, we will use `fetch` to get Message info.
 
 ## Overview
 
@@ -14,22 +14,21 @@ For this tutorial, we will use `fetch` to get Star Wars info.
 Start GraphQL server
 
 ```
-$ cd swapi-graphql && yarn run start
+$ cd graphQL-server && yarn run start
 ```
 
-Start GraphQL basic web server
+Start GraphQL server
 
 ```
-$ cd starwars-normal && yarn run start
+$ cd ./query/query-normal && yarn run start
 ```
 
-It will run on [localhost:3000](localhost:3000)
+It will run on [localhost:3001](localhost:3001)
 
 ## Look to the code
 
 ### Target
-Make a input field for input personID as query variable,
-fetch person info and show on component.
+Click on button for fetch message.
 
 ### Main component
 

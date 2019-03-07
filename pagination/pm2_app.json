@@ -1,0 +1,16 @@
+{
+  "apps": [
+    {
+      "name": "pagination-apollo",
+      "cwd": "./pagination/pagination-apollo",
+      "script": "npm",
+      "args": "start"
+    },
+    {
+      "name": "pagination-relay",
+      "cwd": "./pagination/pagination-relay",
+      "script": "npm",
+      "args": "start"
+    }
+  ]
+}

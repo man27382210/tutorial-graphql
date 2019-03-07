@@ -1,26 +1,20 @@
 {
   "apps": [
     {
-        "name": "swapi-graphql",
-        "cwd": "./swapi-graphql",
-        "script": "npm",
-        "args": "start"
-    },
-    {
-      "name": "starwars-apollo",
-      "cwd": "./starwars-apollo",
+      "name": "query-apollo",
+      "cwd": "./query/query-apollo",
       "script": "npm",
       "args": "start"
     },
     {
-      "name": "starwars-relay",
-      "cwd": "./starwars-relay",
+      "name": "query-relay",
+      "cwd": "./query/query-relay",
       "script": "npm",
       "args": "start"
     },
     {
-      "name": "starwars-normal",
-      "cwd": "./starwars-normal",
+      "name": "query-normal",
+      "cwd": "./query/query-normal",
       "script": "npm",
       "args": "start"
     }

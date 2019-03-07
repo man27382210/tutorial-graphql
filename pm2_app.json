@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+        "name": "graphQL-server",
+        "cwd": "./graphQL-server",
+        "script": "npm",
+        "args": "start"
+    }
+  ]
+}
