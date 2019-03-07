@@ -8,14 +8,14 @@ import { WebSocketLink } from 'apollo-link-ws'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { App } from './App'
 
-const graphqlUrl = 'http://localhost:8000/graphql'
+const graphqlUrl = 'http://localhost:3000/graphql'
 
 const httpLink = new HttpLink({
   uri: graphqlUrl,
 })
 
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:8000/graphql`,
+  uri: `ws://localhost:3000/graphql`,
   options: {
     reconnect: true,
   },
