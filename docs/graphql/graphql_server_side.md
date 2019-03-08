@@ -14,24 +14,22 @@ $ yarn run start
 $ ./pm2 start pm2_app.json // Will start GraphQL server.
 ```
 
-On [http://localhost:3000](http://localhost:3000/graphql) you can see the GraphQL dashboard.
+On [http://localhost:4000](http://localhost:4000/graphql) you can see the GraphQL dashboard.
 
-![Dashboard](../gitbook/images/GraphQL_dashboard.png)
+![Dashboard](../gitbook/images/graphQL_dashboard.png)
 
 On the right bar we can see `Schema`:
 
-![Documentation_explorer](../gitbook/images/Document_explorer.png)
+![Documentation_explorer](../gitbook/images/document_explorer.png)
 
 Which we can go through all schema and see query rule and expect response data type and defined.
 
 Lets see one example `getMessage`
 
-![getMessage_1](../gitbook/images/getMessage_1.png)
+![getMessage_1](../gitbook/images/getMessage.png)
 
-![getMessage_2](../gitbook/images/getMessage_2.png)
-
-Leave term which has `connection` prefix and those arguments for `getMessage` until `pagination` to explain more detail,
-here simple explain about `connection` is a `meta` data describe relation between two node.
+Leave term which has `connection`, `edge` prefix in `getMessage` until next chapter to explain,
+here give a simple ideal that `connection` is a `meta` data describe relation between two node.
 
 Keep looking at `getMessage`:
 

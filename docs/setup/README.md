@@ -13,23 +13,26 @@ $ chmod 700 install.sh
 $ ./install.sh
 ```
 
-## Run dev server
+## Run GraphQL server
 
 ```bash
 $ ./pm2 start pm2_app.json
 ```
+graphQL-server on 4000
 
-starwars-normal on 3000
-starwars-apollo on 3001
-starwars-relay on 3002
-swapi-graphql on 5000
+```bash
+$ ./pm2 start ./query/pm2_app.json
+```
+query-basic on 3001
+query-apollo on 3002
+query-relay on 3003
 
 ## PM2 operation
 
 > see all server status
 
 ```bash
-$ ./pm2 ls
+$ ./pm2 list
 ```
 
 > stop all

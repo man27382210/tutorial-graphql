@@ -8,15 +8,12 @@
 
 /*::
 import type { ConcreteFragment } from 'relay-runtime';
+type nodeFragment$ref = any;
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type messagesFragment$ref: FragmentReference;
 export type messagesFragment = {|
   +edges: ?$ReadOnlyArray<?{|
-    +node: ?{|
-      +id: string,
-      +author: ?string,
-      +content: ?string,
-    |}
+    +$fragmentRefs: nodeFragment$ref
   |}>,
   +$refType: messagesFragment$ref,
 |};
@@ -40,41 +37,14 @@ const node/*: ConcreteFragment*/ = {
       "plural": true,
       "selections": [
         {
-          "kind": "LinkedField",
-          "alias": null,
-          "name": "node",
-          "storageKey": null,
-          "args": null,
-          "concreteType": "Message",
-          "plural": false,
-          "selections": [
-            {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "id",
-              "args": null,
-              "storageKey": null
-            },
-            {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "author",
-              "args": null,
-              "storageKey": null
-            },
-            {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "content",
-              "args": null,
-              "storageKey": null
-            }
-          ]
+          "kind": "FragmentSpread",
+          "name": "nodeFragment",
+          "args": null
         }
       ]
     }
   ]
 };
 // prettier-ignore
-(node/*: any*/).hash = '2d226276a959d1ca02e7b706a49370e4';
+(node/*: any*/).hash = '3c1f8f6459bdff188209234a6efd04f0';
 module.exports = node;

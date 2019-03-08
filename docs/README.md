@@ -1,5 +1,4 @@
-
-GraphQL Client Training
+# GraphQL Client Training
 ====================
 
 With this training, you will learn about basic GraphQL Client side implementation
@@ -15,11 +14,11 @@ With this training, you will learn about basic GraphQL Client side implementatio
 	* GraphQL Basic usage
 	* Apollo
 	* Relay
-	* Compare
 * Advanced
   * Mutation
   * Pagination
   * Subscriptions and Live
+  * Compare
   * New things
 
 ## [SUMMARY](SUMMARY.md)

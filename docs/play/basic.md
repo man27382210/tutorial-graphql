@@ -28,6 +28,7 @@ It will run on [localhost:3001](localhost:3001)
 ## Look to the code
 
 ### Target
+
 Click on button for fetch message.
 
 ### Main component
@@ -37,50 +38,82 @@ it's high order component which has own state and you can imagine it as a Single
 Below is simple sudo code:
 
 ```
-const PersonState: Person = {
-  person: {},
-  error: false,
-  loading: true,
-  personID: '1',
-  graphqlQueryString: personQuery,
+type GetMessageType = {
+  getMessage?: {
+    edges?: [
+      {
+        node: {
+          id: string
+          author: string
+          content: string
+        }
+      }
+    ]
+  }
 }
 
-const PersonContext = React.createContext(PersonState)
+type Message = {
+  data: GetMessageType
+  error: boolean
+  loading: boolean
+  fetchMessages?: () => void,
+}
 
-class App extends React.Component<Props, Person> {
-  fetchPerson = () => {
+const MessageState: Message = { 
+  data: {},
+  error: false,
+  loading: true,
+}
+
+const MessageContext = React.createContext(MessageState)
+
+class App extends React.Component<{}, Message> {
+  state = MessageState
+  fetchMessages = () => {
     //do fetch
     fetch(graphql endpoint...)
-    .then(data => {
-      this.setState({person: data.person, loading: false})
+    .then((result: ResultData) => {
+      try {
+        const resultObject = {
+          data: result.data
+            ? result.data
+            : {},
+          loading: false,
+          error: false,
+        }
+        this.setState(resultObject)
+      } catch {
+        throw Error
+      }
     })
     .catch((e) => this.setState({error: true}))
   }
 
   render() {
     return (
-      <PersonContext.Provider
+      <MessageContext.Provider
         value={
           {
-            fetchPerson: this.fetchPerson,
+            fetchMessages: this.fetchMessages,
             ...this.state
           }
-        }>
+        }
+      >
           <Component>
-      </PersonContext.Provider>
+      </MessageContext.Provider>
     )
   }
 }
 
 const Component = () => {
   return (
-    <PersonContext.Consumer>
-    {({ loading, error, person }) => {
+    <MessageContext.Consumer>
+    {({ loading, error, data }) => {
       if(loading) return (<>loading</>)
       if(error) return (<>error</>)
-      return (<>{person}</>)
+      return (<Child data={data}/>)
     }}
-    </PersonContext.Consumer>
+    </MessageContext.Consumer>
   )
 }
 ```
@@ -92,32 +125,29 @@ Component will re-render with new state.
 
 ### Input Field Component
 
-We use the other component which have input field, submit button and also register `PersonContext`.
+We use the other component which have input field, submit button and also register `MessageContext`.
 
 ```
-export const SearchUser = () => {
-  const personIDInput = React.createRef()
+export const GetMessage = withStyles(searchStyle)(({ classes }: Props)=> {
   return (
-    <PersonContext.Consumer>
-      {({fetchPerson}) => { 
+    <MessageContext.Consumer>
+      {({ fetchMessages }) => {
         const submitPerson = () => {
-          const personID = personIDInput.current ? personIDInput.current.value : '1'
-          fetchPerson(personID)
+          if (fetchMessages) fetchMessages()
         }
         return (
-          <>
-            <input ref={personIDInput} defaultValue='1' />
-            <button onClick={submitPerson}> GET Person </button>
-          </>
+          <Paper className={classes.infoPaper}>
+            <button onClick={submitPerson}> GET Messages </button>
+          </Paper>
         )
       }}
-    </PersonContext.Consumer>
+    </MessageContext.Consumer>
   )
 })
 ```
 
 Once click the button,
-`fetchPerson` will trigger and do the fetch,
+`fetchMessages` will trigger and do the fetch,
 result will update context state and re-render Component to show the data or error.
 
 ### GraphQL Schema
@@ -126,123 +156,110 @@ Let's focus on GraphQL query,
 see the queries file:
 
 ```
-query GetSWPersonByPersonID($personID: ID) {
-  person(personID: $personID) {
-    .....
+export const query = `
+  query {
+    getMessage {
+      edges {
+        node {
+          id
+          author
+          content
+        }
+      }
+    }
   }
-}
+`
 ```
 
-`GetSWPersonByPersonID` is operation name,
-`$personID` is query variable use in person.
-
-Here we made several `fragment` as example,
-see which `films` this person appear and what kinds of `Starship` this person has.
+Query schema is same as last chapter.
 
 ### Fetch function
 
 Let's really look deep into Fetch function
 
 ```
-import { query as personQuery } from './queries'
+type ResultData = Partial<Message>
 
-fetchPerson = (personID) => {
-    if(fetch) {
-      fetch('http://localhost:5000/', 
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          query: personQuery,
-          variables: {
-            "personID": `${personID}`,
-          },
-        })
-      })
-      .then((res: Response) => res.json())
-      .then((result: {[key: string]: string}) => {
-        try {
-          const resultObject = {
-            person: result.data['person'],
-            loading: false,
-            error: false,
-            personID: personID
-          }
-          this.setState(resultObject)
-        } catch {
-          throw Error
-        }
-      })
-      .catch((e: Error) => {
-        this.setState({loading: false, error: true})
-      })
-    } else {
+private fetchMessages = () => {
+  if(fetch) {
+  	fetch('http://localhost:4000/graphql', 
+  	{
+   	 method: 'POST',
+   	 headers: {
+   	   'Content-Type': 'application/json',
+   	   'Accept': 'application/json',
+   	 },
+   	 body: JSON.stringify({
+   	   query,
+   	   variables: {},
+   	 })
+  	})
+  	.then((res: Response) => res.json())
+	.then((result: ResultData) => {
+   	 try {
+      const resultObject = {
+        data: result.data
+        ? result.data
+        : {},
+        loading: false,
+        error: false,
+      }
+        this.setState(resultObject)
+      } catch {
+       throw Error
+      }
+    })
+    .catch((e: Error) => {
       this.setState({loading: false, error: true})
-    }
+    })
+  } else {
+  	this.setState({loading: false, error: true})
   }
 }
 ```
 
-GraphQL is run with `POST` method, `personQuery` is the query schema, we put in
+GraphQL is run with `POST` method, `query ` is the query schema, we put in
 query object with `query` key.
 
-`personID` is put in `variables` key as an object value,
+In this example, `variables` is empty object,
 both `query` and `variables` will using `JSON.stringify` to build `JSON` string and put in body field,
 
 ### Response
 
 ```
-{  
-   "data":{  
-      "person":{  
-         "id":"cGVvcGxlOjE=",
-         "name":"Luke Skywalker",
-         "filmConnection":{  
-            "films":[  
-               {  
-                  "title":"A New Hope",
-                  "episodeID":4
-               },
-               {  
-                  "title":"The Empire Strikes Back",
-                  "episodeID":5
-               },
-               {  
-                  "title":"Return of the Jedi",
-                  "episodeID":6
-               },
-               {  
-                  "title":"Revenge of the Sith",
-                  "episodeID":3
-               },
-               {  
-                  "title":"The Force Awakens",
-                  "episodeID":7
-               }
-            ]
-         },
-         "starshipConnection":{  
-            "starships":[  
-               {  
-                  "name":"X-wing",
-                  "starshipClass":"Starfighter"
-               },
-               {  
-                  "name":"Imperial shuttle",
-                  "starshipClass":"Armed government transport"
-               }
-            ],
-            "totalCount":2
-         }
-      }
-   }
+{
+  "data": {
+    "getMessage": {
+      "edges": [
+        {
+          "node": {
+            "id": "1532c0dc095890cf8dfb",
+            "author": "Davis",
+            "content": "init content1"
+          }
+        },
+        {
+          "node": {
+            "id": "9697eaf5c6c4fd87f861",
+            "author": "Davis",
+            "content": "init content2"
+          }
+        },
+        {
+          "node": {
+            "id": "0fce6185f06d6e039351",
+            "author": "Davis",
+            "content": "init content3"
+          }
+        },
+        ...
+      ]
+    }
+  }
 }
 ```
 
-Response will inside `data` object, `person` is the data we are looking for.
+Response will inside `data` object, `getMessage` is the data we are looking for.
 With this result we can show the information of this person.
 
 ### Error
@@ -251,17 +268,18 @@ When schema level error occurred (not network level),
 response will include error object and show the message as example:
 
 ```
-...
-fragment info on Person {
-    id
-    name
-    filmConnection {
-      films {
-        title
-        episodeIDdddd // <-- here is the error
+export const query = `
+  query {
+    getMessage {
+      edges {
+        node {
+          id
+          authorddddd <--- No such field in schema
+          content
+        }
       }
     }
-...
+  }
 ```
 
 Response
@@ -270,10 +288,10 @@ Response
 {
   "errors": [
     {
-      "message": "Cannot query field \"episodeIDdddd\" on type \"Film\". Did you mean \"episodeID\"?",
+      "message": "Cannot query field \"authorddddd\" on type \"Message\". Did you mean \"author\"?",
       "locations": [
         {
-          "line": 12,
+          "line": 6,
           "column": 9
         }
       ]
@@ -293,7 +311,7 @@ so will go to error case.
 ## Practice
 
 Please try to fetch more information by update the schema,
-also you can try to get other root field such film...etc.
+also you can try to get other information.
 
 ## Overall
 

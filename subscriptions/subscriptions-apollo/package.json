@@ -85,7 +85,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "get-schema-graphql": "node_modules/.bin/get-graphql-schema http://localhost:3000/graphql > ./src/schema.graphql",
+    "get-schema-graphql": "node_modules/.bin/get-graphql-schema http://localhost:4000/graphql > ./src/schema.graphql",
     "type": "apollo client:codegen --localSchemaFile=src/schema.graphql --target typescript --queries=src/**/*.ts --outputFlat=src/component/--schema",
     "docs": "gitbook serve"
   },

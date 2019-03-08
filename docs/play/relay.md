@@ -26,7 +26,7 @@ Same as previous tutorial, we need to download schema from server.
 #### Launch GraphQL server
 
 ```
-$ cd swapi-graphql && yarn run start
+$ cd graphQL-server && yarn run start
 ```
 
 #### Get the schema from server
@@ -34,7 +34,7 @@ $ cd swapi-graphql && yarn run start
 Now we can get the sechma, `get-graphql-schema` support GraphQL type or JSON type, In this example we use graphql type.
 
 ```
-$ yarn run get-schema-graphql
+$ cd ./query/query-relay && yarn run get-schema-graphql
 ```
 This command will generate a `schema.graphql` file under `src/`,
 look deep into it you can see the type definition of each field.
@@ -51,7 +51,7 @@ Remember we introduce `Fragment` in [2.3 - Terminologies](../../graphql/terminol
 Run command
 
 ```
-$ yarn run type
+$ cd ./query/query-relay && yarn run type
 ```
 
 Look deep into this command
@@ -69,7 +69,7 @@ relay-compiler --src ./src/component/ --schema ./schema.graphql
 #### Start Relay
 
 ```
-$ cd starwars-relay && yarn run start
+$ cd ./query/query-relay && yarn run start
 ```
 
 Webpack dev server will run on [http://localhost:3002](http://localhost:3002)
@@ -78,29 +78,27 @@ Webpack dev server will run on [http://localhost:3002](http://localhost:3002)
 
 ### Target
 
-Make a input field for input personID as query variable,
-fetch person info and show on component.
-
 Same as previous section.
+Click on button for fetch message.
 
 ### Main component
 
 #### src/component/Root.js
 
 ```
-const PersonQuery = searchStyle((props) => {
+export const MessageQuery = searchStyle((props) => {
   const { classes } = props
   return (
     <QueryRenderer
       environment={modernEnvironment}
-      query={personQuery}
-      variables={{personID: props.personID}}
+      query={getMessagesQuery}
+      variables={{}}
       render={({error, props}) => {
         if (error) {
           return <Paper className={classes.infoPaper}><div>Error</div></Paper>
         }
-        if (props && props.person) {
-          return <InfoFragment data={props.person}/>
+        if (props && props.getMessage) {
+          return <MessageFragment data={props.getMessage}/>
         } else {
           return <Paper className={classes.infoPaper}><div>Loading</div></Paper>
         }
@@ -124,7 +122,7 @@ import { Environment, Network, RecordSource, Store } from 'relay-runtime'
 import 'whatwg-fetch'
 
 function fetchQuery(operation, variables) {
-  return fetch('http://localhost:5000/', {
+  return fetch('http://localhost:4000/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -150,28 +148,35 @@ here we use facebook isomorphic fetch `whatwg-fetch` and create a `Store` object
 `operation.text`, `variables` are query schema and variables we set in `QueryRender`.
 Once component mount, will get the data in props.
 
-Pass data to child component `InfoFragment`.
+Pass data to child component `MessageFragment`.
 
-#### src/component/InfoFragment.js
+#### src/component/MessageFragment.js
 
 ```
 import React from 'react'
-import Paper from '@material-ui/core/Paper';
+import Paper from '@material-ui/core/Paper'
 import { createFragmentContainer } from 'react-relay'
-import ShipFragment from './ShipFragment'
-import { Info as InfoQuery } from '../queries/info'
+import NodeFragment from './NodeFragment'
+import { messages as messagesQuery } from '../queries/messages'
 import { searchStyle } from '../util/style'
 
-const Info = searchStyle((props) => {
-  const { classes, data: person } = props
-
+const Messages = searchStyle((props) => {
+  const { classes, data: getMessage } = props
+  const { edges } = getMessage
+  if(!edges || edges.length === 0) return <>Error</>
   return (
     <Paper className={classes.infoPaper}>
-      <div>{person.name}</div>
       <ul>
-        {person.starshipConnection && person.starshipConnection.starships
-          ? person.starshipConnection.starships.map((starShip, starShipIndex) => {
-            return <ShipFragment key={`starShip-${starShipIndex}`} data={starShip}/>
+        {edges &&
+         edges.length > 0
+          ? edges.map((edge, index)  => {
+            return edge
+              ? (
+                <li key={`index-${index}`}>
+                  <NodeFragment data={edge} />
+                </li>
+              )
+              : null
           })
           : null
         }
@@ -181,8 +186,8 @@ const Info = searchStyle((props) => {
 })
 
 export default createFragmentContainer(
-  Info,
-  InfoQuery,
+  Messages,
+  messagesQuery,
 )
 ```
 
@@ -195,69 +200,54 @@ Constructor of `createFragmentContainer` needs a `component` for using GraphQL f
 
 For more detail, please check reference [here](https://facebook.github.io/relay/docs/en/fragment-container.html).
 
-`Info` is the stateless component above,
-`InfoQuery` is the fragment spec.
+`Messages ` is the stateless component above,
+`messagesQuery` is the fragment spec.
 
-#### src/queries/info.js
+#### src/queries/getMessages.js
 
 ```
-import { graphql } from 'react-relay';
+import { graphql } from 'react-relay'
 
-export const Info = graphql`
-  fragment infoFragment on Person {
-    id
-    name
-    filmConnection {
-      films {
-        title
-        episodeID
-      }
-    }
-    starshipConnection {
-      starships {
-        ...shipInfoFragment
-      }
-      totalCount
+export const getMessagesQuery =  graphql`
+  query getMessagesQuery {
+    getMessage {
+      ...messagesFragment
     }
   }
 `
 ```
 
-if we print out the data (here rename to person by ES6 Syntactic sugar) in component and compare the network console, we can see what's different between Relay and Apollo.
+Not like previous chapter, here we separate query schema into root and fragment,
+by this design we can use several high order component `xxxContainer` with fragment to do things,
+this part will introduce in future chapter.
+
+#### src/queries/messages.js
+
+```
+import { graphql } from 'react-relay'
+
+export const messages =  graphql`
+  fragment messagesFragment on MessageConnection {
+    edges {
+      ...nodeFragment
+    }
+  }
+`
+```
+
+if we print out the data in component `MessageFragment` and compare to data in network console, we can see what's different between Relay and Apollo.
 
 In network console, all data has been fetch as image:
 
 <img src="../../gitbook/images/relay_network.png" width="500" />
 
-But in `Info` component, you can only get data specifies in fragment spec, like `shipInfoFragment` is an empty object, this is because Relay masking data inside `shipInfoFragment` due to itx describe in other fragment spec.
+Comapre to data we priint out in `MessageFragment` component, you can only get data specifies in fragment spec, Relay will mask other data out of this fragment spec like data in `NodeFragment`.
 
-<img src="../../gitbook/images/relay_info.png" width="500" />
+<img src="../../gitbook/images/relay_message.png" width="500" />
 
-Pass `starShip` to `ShipFragment`.
+### Click
 
-#### src/component/ShipFragment.js
-
-```
-import React from 'react'
-import { createFragmentContainer } from 'react-relay'
-import { ShipInfo as ShipInfoQuery } from '../queries/shipInfo'
-
-const ShipInfo = (props) => {
-  const shipInfo = props.data
-  return <li>{shipInfo.name}</li>
-}
-
-export default createFragmentContainer(
-  ShipInfo,
-  ShipInfoQuery,
-)
-```
-
-Same as `Info` component, `ShipInfo` is stateless component and `ShipInfoQuery` is specify spec.
-
-### Input Field Component
-
-Same as previous tutorial, click button and change the props to re-fetch new data.
+Same as previous tutorial, click button and change loading state, mount the component.
 
 ### Summary
 
@@ -312,51 +302,41 @@ import React from 'react'
 import '../../test/setup'
 import { mount } from 'enzyme'
 import { modernEnvironment } from '../env'
-import { PersonQuery } from './Root'
+import { MessageQuery } from './Root'
 import { mockFetch } from '../../test/mockFetch'
 
-describe('PersonQuery', () => {
-  const mockPerson = {
-    person: {
-      id: 'cGVvcGxlOjE=',
-      name: 'Luke Skywalker',
-      filmConnection: {
-        films: [
-          {
-            title: 'A New Hope',
-            episodeID: 4
+describe('MessageQuery', () => {
+  const mockData = {
+    getMessage: {
+      edges: [
+        {
+          node: {
+            id: "f303b555c9d1f9f97160",
+            author: "Davis",
+            content: "init content1"
           }
-        ]
-      },
-      starshipConnection:{
-        starships:[
-          {  
-            name: "X-wing",
-            starshipClass: "Starfighter"
-          }
-        ],
-        totalCount: 1
-      }
+        }
+      ]
     }
   }
 
   describe('Root app', () => {
     it('should render content when given a successful response', async () => {
-      mockFetch({response: { data: mockPerson }})
-      const wrapper = mount(<PersonQuery personID={'1'} />)
+      mockFetch({response: { data: mockData }})
+      const wrapper = mount(<MessageQuery />)
       return Promise.resolve(wrapper)
         .then((comp) => {
           return comp.update()
         })
         .then(() => {
-          expect(wrapper.text()).toContain("Luke Skywalker")
+          expect(wrapper.text()).toContain("Davis")
         })
     })
 
     it('should render error when given a fail response', async () => {
       mockFetch({status: 500})
       modernEnvironment.getStore().getSource().clear()
-      const wrapper = mount(<PersonQuery personID={'1'} />)
+      const wrapper = mount(<MessageQuery />)
       return Promise.resolve(wrapper)
         .then((comp) => {
           return comp.update()
@@ -380,45 +360,35 @@ Seems we setting cache in react-relay, we need to clear the cache to do the next
 #### Fragment component test
 
 ```
-// src/component/InfoFragment.test.js
+// src/component/MessageFragment.test.js
 jest.mock('react-relay', () => ({createFragmentContainer: component => component}))
 import React from 'react'
 import '../../test/setup'
 import { mount } from 'enzyme'
-import InfoFragment from './InfoFragment'
+import MessageFragment from './MessageFragment'
 
 describe('Info', () => {
-  const mockPerson = {
-    person: {
-      id: 'cGVvcGxlOjE=',
-      name: 'Luke Skywalker',
-      filmConnection: {
-        films: [
-          {
-            title: 'A New Hope',
-            episodeID: 4
+  const mockData = {
+    getMessage: {
+      edges: [
+        {
+          node: {
+            id: "f303b555c9d1f9f97160",
+            author: "Davis",
+            content: "init content1"
           }
-        ]
-      },
-      starshipConnection:{
-        starships:[
-          {  
-            name: "X-wing",
-            starshipClass: "Starfighter"
-          }
-        ],
-        totalCount: 1
-      }
+        }
+      ]
     }
   }
 
   describe('Info Fragment', () => {
     it('should render content when have data pass', async () => {
-      const wrapper = mount(<InfoFragment classes={{}} data={mockPerson.person} />)
-      expect(wrapper.text()).toContain("Luke Skywalker")
+      const wrapper = mount(<MessageFragment classes={{}} data={mockData.getMessage} />)
+      expect(wrapper.text()).toContain("Davis")
     })
     it('should render Error when given empty data', async () => {
-      const wrapper = mount(<InfoFragment classes={{}} data={{}} />)
+      const wrapper = mount(<MessageFragment classes={{}} data={{}} />)
       expect(wrapper.text()).toContain("Error")
     })
   })

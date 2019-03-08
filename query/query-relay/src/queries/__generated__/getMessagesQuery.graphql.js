@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 8ab4d4097032242d61437a85d8760bb4
+ * @relayHash a6a40c9c2599f56b196429fe5897bf07
  */
 
 /* eslint-disable */
@@ -10,9 +10,7 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 type messagesFragment$ref = any;
-export type getMessagesQueryVariables = {|
-  first?: ?number
-|};
+export type getMessagesQueryVariables = {||};
 export type getMessagesQueryResponse = {|
   +getMessage: ?{|
     +$fragmentRefs: messagesFragment$ref
@@ -26,62 +24,47 @@ export type getMessagesQuery = {|
 
 
 /*
-query getMessagesQuery(
-  $first: Int
-) {
-  getMessage(first: $first) {
+query getMessagesQuery {
+  getMessage {
     ...messagesFragment
   }
 }
 
 fragment messagesFragment on MessageConnection {
   edges {
-    node {
-      id
-      author
-      content
-    }
+    ...nodeFragment
+  }
+}
+
+fragment nodeFragment on MessageEdge {
+  node {
+    id
+    author
+    content
   }
 }
 */
 
-const node/*: ConcreteRequest*/ = (function(){
-var v0 = [
-  {
-    "kind": "LocalArgument",
-    "name": "first",
-    "type": "Int",
-    "defaultValue": null
-  }
-],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "first",
-    "type": "Int"
-  }
-];
-return {
+const node/*: ConcreteRequest*/ = {
   "kind": "Request",
   "operationKind": "query",
   "name": "getMessagesQuery",
   "id": null,
-  "text": "query getMessagesQuery(\n  $first: Int\n) {\n  getMessage(first: $first) {\n    ...messagesFragment\n  }\n}\n\nfragment messagesFragment on MessageConnection {\n  edges {\n    node {\n      id\n      author\n      content\n    }\n  }\n}\n",
+  "text": "query getMessagesQuery {\n  getMessage {\n    ...messagesFragment\n  }\n}\n\nfragment messagesFragment on MessageConnection {\n  edges {\n    ...nodeFragment\n  }\n}\n\nfragment nodeFragment on MessageEdge {\n  node {\n    id\n    author\n    content\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "getMessagesQuery",
     "type": "Query",
     "metadata": null,
-    "argumentDefinitions": v0,
+    "argumentDefinitions": [],
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "getMessage",
         "storageKey": null,
-        "args": v1,
+        "args": null,
         "concreteType": "MessageConnection",
         "plural": false,
         "selections": [
@@ -97,14 +80,14 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "getMessagesQuery",
-    "argumentDefinitions": v0,
+    "argumentDefinitions": [],
     "selections": [
       {
         "kind": "LinkedField",
         "alias": null,
         "name": "getMessage",
         "storageKey": null,
-        "args": v1,
+        "args": null,
         "concreteType": "MessageConnection",
         "plural": false,
         "selections": [
@@ -156,7 +139,6 @@ return {
     ]
   }
 };
-})();
 // prettier-ignore
-(node/*: any*/).hash = '8d4514b857924aaf86c37cfa19357d5d';
+(node/*: any*/).hash = '161c0a4d5f32dbf7829671179a133cc6';
 module.exports = node;

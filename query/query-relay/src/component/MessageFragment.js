@@ -1,6 +1,7 @@
 import React from 'react'
 import Paper from '@material-ui/core/Paper'
 import { createFragmentContainer } from 'react-relay'
+import NodeFragment from './NodeFragment'
 import { messages as messagesQuery } from '../queries/messages'
 import { searchStyle } from '../util/style'
 
@@ -14,15 +15,13 @@ const Messages = searchStyle((props) => {
         {edges &&
          edges.length > 0
           ? edges.map((edge, index)  => {
-            return edge && edge.node
+            return edge
               ? (
                 <li key={`index-${index}`}>
-                  <div>{edge.node.author}</div>
-                  <div>{edge.node.id}</div>
-                  <div>{edge.node.content}</div>
+                  <NodeFragment data={edge} />
                 </li>
               )
-              : renderNoData()
+              : null
           })
           : null
         }

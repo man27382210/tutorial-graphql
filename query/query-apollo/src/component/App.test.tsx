@@ -30,6 +30,6 @@ describe('Messages', () => {
         <Messages />
       </ApolloProvider>,
     )
-    expect(wrapper.find('div').at(1).text()).toEqual('Davis')
+    expect(wrapper.find('div').at(0).text()).toContain('Davis')
   })
 })

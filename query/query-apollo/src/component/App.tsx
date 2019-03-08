@@ -65,11 +65,8 @@ export const App = withStyles(searchStyle)(
     state = {
       loading: true
     }
-
     submitPerson = () => this.setState({loading: false})
-
     render() {
-
       const { classes } = this.props
       const { loading } = this.state
       return (

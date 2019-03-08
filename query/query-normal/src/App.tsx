@@ -124,7 +124,7 @@ class MessageApp extends React.Component<{}, Message> {
   
   private fetchMessages = () => {
     if(fetch) {
-      fetch('http://localhost:3000/graphql', 
+      fetch('http://localhost:4000/graphql', 
       {
         method: 'POST',
         headers: {

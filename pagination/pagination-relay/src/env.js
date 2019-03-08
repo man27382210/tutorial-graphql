@@ -1,7 +1,7 @@
 import { Environment, Network, RecordSource, Store } from 'relay-runtime'
 import 'whatwg-fetch'
 
-const GRAPHQL_SERVER = 'http://localhost:3000/graphql'
+const GRAPHQL_SERVER = 'http://localhost:4000/graphql'
 
 function fetchQuery(operation, variables) {
   return fetch(GRAPHQL_SERVER, {

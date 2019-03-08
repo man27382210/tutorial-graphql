@@ -23,7 +23,7 @@ Start GraphQL basic web server
 $ cd starwars-normal && yarn run start
 ```
 
-It will run on [localhost:3000](localhost:3000)
+It will run on [localhost:4000](localhost:4000)
 
 ## Look to the code
 
