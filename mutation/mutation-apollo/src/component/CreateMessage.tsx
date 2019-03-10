@@ -55,7 +55,7 @@ export class CreateMessage extends React.Component {
               />
             </div>
             <button
-              onClick={() => this.createMessage(createMessage)}
+              onClick={() => this._createMessage(createMessage)}
             >
               submit
             </button>
@@ -66,7 +66,7 @@ export class CreateMessage extends React.Component {
     )
   }
 
-  createMessage = (createMessage: MutationFn<CreateMessageMutation, CreateMessageMutationVariables>) => {
+  _createMessage = (createMessage: MutationFn<CreateMessageMutation, CreateMessageMutationVariables>) => {
     if (this.authorRef.current  && this.contentRef.current) {
       const { value: authorValue } = this.authorRef.current
       const { value: contentValue } = this.contentRef.current

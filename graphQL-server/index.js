@@ -117,10 +117,10 @@ var fakeDatabase = [
   }
 ]
 
-var fakeDatabaseIndexObj = {}
-fakeDatabase.forEach((message, index) => {
-  fakeDatabaseIndexObj[message.id] = index
-})
+// var fakeDatabaseIndexObj = {}
+// fakeDatabase.forEach((message, index) => {
+//   fakeDatabaseIndexObj[message.id] = index
+// })
 
 var getMessageEdgesFromPageInfo = function(pageInfo) {
   const edges = fakeDatabase.map(
@@ -163,12 +163,15 @@ var getMessageEdgesFromPageInfo = function(pageInfo) {
     before
   } = pageInfo
   
-  var afterIndex = after && typeof fakeDatabaseIndexObj[after] !== 'undefined'
-    ? fakeDatabaseIndexObj[after] + 1
-    : 0
-  var beforeIndex = before && typeof fakeDatabaseIndexObj[before] !== 'undefined'
-    ? fakeDatabaseIndexObj[before]
-    : edges.length
+  
+  var afterIndex = _.findLastIndex(edges, (msg) => msg.cursor === after)
+  afterIndex === -1
+    ? afterIndex = 0 
+    : afterIndex = afterIndex + 1
+
+  var beforeIndex = _.findLastIndex(edges, (msg) => msg.cursor === before)
+  if (beforeIndex === - 1) beforeIndex = edges.length
+
   if (afterIndex >= beforeIndex) return returnEdges
 
   const sliceEdges = _.slice(edges, afterIndex, beforeIndex)
@@ -184,8 +187,8 @@ var getMessageEdgesFromPageInfo = function(pageInfo) {
 
   const startCursor = finalEdges[0].cursor
   const endCursor = finalEdges[finalEdges.length -1].cursor
-  const hasNextPage =  fakeDatabaseIndexObj[endCursor] < edges.length - 1
-  const hasPreviousPage = fakeDatabaseIndexObj[startCursor] > 0
+  // const hasNextPage = fakeDatabaseIndexObj[endCursor] < edges.length - 1
+  // const hasPreviousPage = fakeDatabaseIndexObj[startCursor] > 0
   return {
     ...returnEdges,
     pageInfo: {
