@@ -11,9 +11,6 @@ import {
 import { GetMessage } from './--schema/GetMessage'
 
 class MutationMessage extends Mutation<CreateMessageMutation, CreateMessageMutationVariables> {}
-type MessagePayload = "MessagePayload"
-type MessageEdge = "MessageEdge"
-type Message = "Message"
 
 const updateFucntion = (cache: DataProxy, mutationResult: { data: CreateMessageMutation }) => {
   const { createMessage } = mutationResult.data
@@ -79,11 +76,11 @@ export class CreateMessage extends React.Component {
         },
         optimisticResponse: {
           createMessage: {
-            __typename: "MessagePayload" as MessagePayload,
+            __typename: "MessagePayload" as "MessagePayload",
             messageEdge: {
-              __typename: "MessageEdge" as MessageEdge,
+              __typename: "MessageEdge" as "MessageEdge",
               node: {
-                __typename: "Message" as Message,
+                __typename: "Message" as "Message",
                 id: 'xxx',
                 content: contentValue,
                 author: authorValue 

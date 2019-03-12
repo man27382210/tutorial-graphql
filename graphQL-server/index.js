@@ -164,12 +164,12 @@ var getMessageEdgesFromPageInfo = function(pageInfo) {
   } = pageInfo
   
   
-  var afterIndex = _.findLastIndex(edges, (msg) => msg.cursor === after)
+  let afterIndex = _.findIndex(edges, (msg) => msg.cursor === after)
   afterIndex === -1
     ? afterIndex = 0 
     : afterIndex = afterIndex + 1
 
-  var beforeIndex = _.findLastIndex(edges, (msg) => msg.cursor === before)
+  let beforeIndex = _.findIndex(edges, (msg) => msg.cursor === before)
   if (beforeIndex === - 1) beforeIndex = edges.length
 
   if (afterIndex >= beforeIndex) return returnEdges
@@ -187,8 +187,10 @@ var getMessageEdgesFromPageInfo = function(pageInfo) {
 
   const startCursor = finalEdges[0].cursor
   const endCursor = finalEdges[finalEdges.length -1].cursor
-  // const hasNextPage = fakeDatabaseIndexObj[endCursor] < edges.length - 1
-  // const hasPreviousPage = fakeDatabaseIndexObj[startCursor] > 0
+  
+  const hasNextPage = _.findIndex(edges, (msg) => msg.cursor === endCursor) < edges.length - 1
+  const hasPreviousPage = _.findIndex(edges, (msg) => msg.cursor === startCursor) > 0
+
   return {
     ...returnEdges,
     pageInfo: {
@@ -237,7 +239,6 @@ var resolvers = {
     createMessage: function (__, { input }) {
       var id = createId()
       fakeDatabase.push({id, ...input})
-      fakeDatabaseIndexObj[id] = fakeDatabase.length
       return {messageEdge: {cursor: id, node: new Message(id, input)}}
     },
   }

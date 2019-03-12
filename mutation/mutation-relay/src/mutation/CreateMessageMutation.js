@@ -51,12 +51,13 @@ export const createMessageMutation = (author, content, callback) => {
         sharedUpdater(store, newEdge)
       },
       optimisticUpdater: (store) => {
-        const id = 'client:newMessage:xxx'
+        const id = 'node_cursor_xxxx'
         const node = store.create(id, 'Message')
+        node.setValue(id, 'id')
         node.setValue(content, 'content')
         node.setValue(author, 'author')
         const newEdge = store.create(
-          'client:newEdge:xxx',
+          'edge_cursor_xxxx',
           'messageEdge',
         )
         newEdge.setLinkedRecord(node, 'node')
