@@ -117,11 +117,6 @@ var fakeDatabase = [
   }
 ]
 
-// var fakeDatabaseIndexObj = {}
-// fakeDatabase.forEach((message, index) => {
-//   fakeDatabaseIndexObj[message.id] = index
-// })
-
 var getMessageEdgesFromPageInfo = function(pageInfo) {
   const edges = fakeDatabase.map(
     (message) => {

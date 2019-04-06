@@ -19,9 +19,6 @@ Not sure when will Relay (Modern) start to support other Client Framework even R
 Previous tutorial show us how different between Relay and Apollo. <del>(most comment on community is Relay is not easy for beginner)</del>
 
 ## Server Requirement
-## Query
-## Mutation
-## Cache
 ## Conclusion
 
 
