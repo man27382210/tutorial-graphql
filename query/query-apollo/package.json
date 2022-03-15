@@ -74,7 +74,7 @@
     "gitbook-cli": "^2.3.2",
     "gitbook-plugin-expandable-chapters": "^0.2.0",
     "graphql-compiler": "^1.7.0",
-    "lodash-es": "^4.17.11",
+    "lodash-es": "^4.17.21",
     "react-test-renderer": "16.4.2",
     "typescript": "^3.2.2"
   },
